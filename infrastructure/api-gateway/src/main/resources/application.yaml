@@ -1,0 +1,66 @@
+server:
+  port: 8080
+
+security:
+  jwt:
+    jwk-set-uri: http://localhost:8081/.well-known/jwks.json
+    issuer-uri: http://localhost:8081
+
+spring:
+  application:
+    name: api-gateway
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${security.jwt.jwk-set-uri}
+          issuer-uri: ${security.jwt.issuer-uri}
+
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin
+
+      routes:
+        - id: auth-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/auth/**
+
+        - id: product-service
+          uri: http://localhost:8082
+
+          predicates:
+            - Path=/api/products/**
+
+          filters:
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@userKeyResolver}"
+
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+
+  otlp:
+    tracing:
+      endpoint: http://localhost:4318/v1/traces
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
