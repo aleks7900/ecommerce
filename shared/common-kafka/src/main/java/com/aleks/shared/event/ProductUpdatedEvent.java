@@ -14,6 +14,10 @@ public record ProductUpdatedEvent(
 
     ProductStatus status,
 
-    Instant updatedAt
+    Instant updatedAt,
+
+    String name,
+
+    UUID sellerId
 ) {
 }

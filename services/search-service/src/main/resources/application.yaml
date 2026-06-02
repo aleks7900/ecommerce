@@ -1,0 +1,13 @@
+server:
+  port: 8090
+
+spring:
+
+  application:
+    name: search-service
+
+  elasticsearch:
+    uris: http://localhost:9200
+
+  kafka:
+    bootstrap-servers: localhost:9092

@@ -11,6 +11,7 @@ include(
         "services:notification-service",
         "services:analytics-service",
         "services:shipping-service",
+        "services:search-service",
 
         "shared:outbox-service",
 

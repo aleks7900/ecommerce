@@ -76,6 +76,16 @@ services:
     ports:
       - "5439:5432"
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
+
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: false
+
+    ports:
+      - "9200:9200"
+
   kafka:
     image: apache/kafka:latest
 
