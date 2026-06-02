@@ -65,6 +65,17 @@ services:
     ports:
       - "5438:5432"
 
+  postgres-shipping:
+    image: postgres:16
+
+    environment:
+      POSTGRES_DB: shipping_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pAskal123
+
+    ports:
+      - "5439:5432"
+
   kafka:
     image: apache/kafka:latest
 

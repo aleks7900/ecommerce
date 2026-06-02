@@ -42,8 +42,6 @@ dependencies {
 
     implementation project(":shared:common-kafka")
 
-    implementation project(":shared:outbox-service")
-
     runtimeOnly 'org.postgresql:postgresql'
 }
 

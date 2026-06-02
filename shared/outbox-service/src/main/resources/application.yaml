@@ -1,0 +1,25 @@
+server:
+  port: 8089
+
+spring:
+
+  application:
+    name: shipping-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5439/shipping_db
+    username: postgres
+    password: pAskal123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

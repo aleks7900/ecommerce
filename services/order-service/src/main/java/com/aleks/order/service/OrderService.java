@@ -4,7 +4,7 @@ import com.aleks.order.dto.request.CreateOrderRequest;
 import com.aleks.order.entity.Order;
 import com.aleks.order.entity.OrderStatus;
 import com.aleks.order.exception.OrderNotFoundException;
-import com.aleks.order.kafka.OrderEventProducer;
+import com.aleks.order.kafka.OrderEventPublisher;
 import com.aleks.order.repository.OrderRepository;
 import com.aleks.shared.event.OrderCreatedEvent;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class OrderService {
 
   private final OrderRepository orderRepository;
 
-  private final OrderEventProducer orderEventProducer;
+  private final OrderEventPublisher orderEventPublisher;
 
   public Order create(
       CreateOrderRequest request
@@ -47,8 +47,8 @@ public class OrderService {
             .createdAt(Instant.now())
             .build();
 
-    orderEventProducer
-        .sendOrderCreatedEvent(event);
+    orderEventPublisher
+        .publishOrderCreatedEvent(event);
 
     return savedOrder;
   }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ProductEventProducer {
+public class ProductEventPublisher {
 
   private static final String PRODUCT_CREATED_TOPIC =
       "product-created";

@@ -19,8 +19,8 @@ public class OrderConfirmedConsumer {
 
   private final EmailNotificationService emailService;
 
-  private final NotificationEventProducer
-      notificationEventProducer;
+  private final NotificationEventPublisher
+      notificationEventPublisher;
 
   @KafkaListener(
       topics = "order-confirmed",
@@ -72,8 +72,8 @@ public class OrderConfirmedConsumer {
             )
             .build();
 
-    notificationEventProducer
-        .sendNotificationSentEvent(
+    notificationEventPublisher
+        .publishNotificationSentEvent(
             sentEvent
         );
 

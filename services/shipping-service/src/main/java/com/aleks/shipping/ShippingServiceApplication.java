@@ -1,4 +1,4 @@
-package com.aleks.order;
+package com.aleks.shipping;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,19 +7,21 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaRepositories({
-    "com.aleks.order.repository",
+    "com.aleks.shipping.repository",
     "com.aleks.outbox.repository"
 })
 @EntityScan({
-    "com.aleks.order.entity",
+    "com.aleks.shipping.entity",
     "com.aleks.outbox.entity"
 })
-public class OrderServiceApplication {
+public class ShippingServiceApplication {
 
-  public static void main(String[] args) {
+  public static void main(
+      String[] args
+  ) {
 
     SpringApplication.run(
-        OrderServiceApplication.class,
+        ShippingServiceApplication.class,
         args
     );
   }

@@ -19,7 +19,7 @@ public class InventoryReservedConsumer {
 
   private final PaymentService paymentService;
 
-  private final PaymentEventProducer paymentEventProducer;
+  private final PaymentEventPublisher paymentEventPublisher;
 
   @RetryableTopic(
       attempts = "3",
@@ -52,7 +52,7 @@ public class InventoryReservedConsumer {
             .completedAt(Instant.now())
             .build();
 
-    paymentEventProducer.sendPaymentCompleted(
+    paymentEventPublisher.sendPaymentCompleted(
         completedEvent
     );
   }

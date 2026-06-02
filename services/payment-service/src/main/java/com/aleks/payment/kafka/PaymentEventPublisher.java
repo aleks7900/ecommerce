@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PaymentEventProducer {
+public class PaymentEventPublisher {
 
   private final KafkaTemplate<String, Object> kafkaTemplate;
 

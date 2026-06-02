@@ -8,7 +8,6 @@ import com.aleks.shared.event.PaymentCompletedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -20,7 +19,7 @@ public class PaymentCompletedConsumer {
 
   private final OrderRepository orderRepository;
 
-  private final OrderEventProducer orderEventProducer;
+  private final OrderEventPublisher orderEventPublisher;
 
   @KafkaListener(
       topics = "payment-completed",
@@ -65,8 +64,8 @@ public class PaymentCompletedConsumer {
             .confirmedAt(Instant.now())
             .build();
 
-    orderEventProducer
-        .sendOrderConfirmedEvent(
+    orderEventPublisher
+        .publishOrderConfirmedEvent(
             confirmedEvent
         );
 

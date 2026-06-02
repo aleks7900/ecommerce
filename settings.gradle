@@ -10,6 +10,9 @@ include(
         "services:payment-service",
         "services:notification-service",
         "services:analytics-service",
+        "services:shipping-service",
+
+        "shared:outbox-service",
 
         "shared:common-security",
         "shared:common-kafka",

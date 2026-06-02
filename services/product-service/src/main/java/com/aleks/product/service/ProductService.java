@@ -4,7 +4,7 @@ import com.aleks.product.dto.request.CreateProductRequest;
 import com.aleks.product.dto.request.UpdateProductRequest;
 import com.aleks.product.entity.Product;
 import com.aleks.product.exception.ProductNotFoundException;
-import com.aleks.product.kafka.ProductEventProducer;
+import com.aleks.product.kafka.ProductEventPublisher;
 import com.aleks.product.repository.ProductRepository;
 import com.aleks.shared.event.ProductCreatedEvent;
 import com.aleks.shared.event.ProductStatus;
@@ -21,7 +21,7 @@ public class ProductService {
 
   private final ProductRepository productRepository;
 
-  private final ProductEventProducer productEventProducer;
+  private final ProductEventPublisher productEventPublisher;
 
   public Product create(CreateProductRequest request) {
 
@@ -36,7 +36,7 @@ public class ProductService {
         .build();
 
     Product save = productRepository.save(product);
-    productEventProducer.sendProductCreatedEvent(
+    productEventPublisher.sendProductCreatedEvent(
         ProductCreatedEvent.builder()
             .productId(product.getId())
             .name(product.getName())
