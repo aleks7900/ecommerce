@@ -1,3 +1,8 @@
+pluginManagement {
+    plugins {
+        id 'org.jetbrains.kotlin.jvm' version '2.2.0'
+    }
+}
 rootProject.name = 'ecommerce'
 
 include(
@@ -12,6 +17,7 @@ include(
         "services:analytics-service",
         "services:shipping-service",
         "services:search-service",
+        "services:analytics-streams-service",
 
         "shared:outbox-service",
 

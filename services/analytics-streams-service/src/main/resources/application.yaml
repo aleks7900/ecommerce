@@ -1,0 +1,13 @@
+server:
+  port: 8091
+
+spring:
+
+  application:
+    name: analytics-streams-service
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    streams:
+      application-id: analytics-streams
