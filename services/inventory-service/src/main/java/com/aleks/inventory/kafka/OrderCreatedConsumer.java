@@ -27,6 +27,8 @@ public class OrderCreatedConsumer {
 
   private final OutboxPublisherService outboxPublisherService;
 
+  private final OutboxPublisherService outboxPublisherService;
+
   @KafkaListener(
       topics = "order-created",
       groupId = "inventory-group"
