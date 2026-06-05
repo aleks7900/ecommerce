@@ -53,6 +53,10 @@ dependencies {
     implementation 'io.confluent:kafka-avro-serializer:7.6.1'
 
     implementation 'org.apache.avro:avro:1.11.4'
+
+    implementation project(":shared:common-avro")
+
+    implementation 'org.apache.avro:avro:1.11.4'
 }
 
 dependencyManagement {

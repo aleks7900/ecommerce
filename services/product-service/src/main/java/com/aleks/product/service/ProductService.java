@@ -1,5 +1,6 @@
 package com.aleks.product.service;
 
+import com.aleks.avro.ProductCreatedEvent;
 import com.aleks.product.dto.request.CreateProductRequest;
 import com.aleks.product.dto.request.UpdateProductRequest;
 import com.aleks.product.entity.Product;
@@ -39,12 +40,12 @@ public class ProductService {
 
     Product save = productRepository.save(product);
     productEventPublisher.sendProductCreatedEvent(
-        ProductCreatedEvent.builder()
-            .productId(product.getId())
-            .name(product.getName())
-            .price(product.getPrice())
-            .sellerId(product.getSellerId())
-            .createdAt(product.getCreatedAt())
+        ProductCreatedEvent.newBuilder()
+            .setProductId(String.valueOf(product.getId()))
+            .setName(product.getName())
+            .setPrice(product.getPrice().doubleValue())
+            .setSellerId(String.valueOf(product.getSellerId()))
+            .setCreatedAt(String.valueOf(product.getCreatedAt()))
             .build());
     return save;
   }
