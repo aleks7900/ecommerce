@@ -1,0 +1,16 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "InventoryOutOfStockEvent",
+
+  "fields": [
+    {
+      "name": "productId",
+      "type": "string"
+    },
+    {
+      "name": "occurredAt",
+      "type": "string"
+    }
+  ]
+}

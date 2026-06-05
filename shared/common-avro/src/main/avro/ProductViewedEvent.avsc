@@ -1,0 +1,20 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "ProductViewedEvent",
+
+  "fields": [
+    {
+      "name": "productId",
+      "type": "string"
+    },
+    {
+      "name": "userId",
+      "type": "string"
+    },
+    {
+      "name": "viewedAt",
+      "type": "string"
+    }
+  ]
+}

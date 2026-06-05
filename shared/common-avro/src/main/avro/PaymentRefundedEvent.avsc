@@ -1,0 +1,24 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "PaymentRefundedEvent",
+
+  "fields": [
+    {
+      "name": "paymentId",
+      "type": "string"
+    },
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "amount",
+      "type": "double"
+    },
+    {
+      "name": "refundedAt",
+      "type": "string"
+    }
+  ]
+}

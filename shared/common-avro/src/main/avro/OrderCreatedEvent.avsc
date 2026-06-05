@@ -1,0 +1,32 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "OrderCreatedEvent",
+
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "productId",
+      "type": "string"
+    },
+    {
+      "name": "buyerId",
+      "type": "string"
+    },
+    {
+      "name": "quantity",
+      "type": "int"
+    },
+    {
+      "name": "createdAt",
+      "type": "string"
+    },
+    {
+      "name": "totalPrice",
+      "type": "double"
+    }
+  ]
+}

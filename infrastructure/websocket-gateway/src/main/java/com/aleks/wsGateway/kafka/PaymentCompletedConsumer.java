@@ -1,6 +1,6 @@
 package com.aleks.wsGateway.kafka;
 
-import com.aleks.shared.event.PaymentCompletedEvent;
+import com.aleks.avro.PaymentCompletedEvent;
 import com.aleks.wsGateway.webSocket.NotificationWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

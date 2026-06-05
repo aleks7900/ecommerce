@@ -1,9 +1,10 @@
 package com.aleks.order.kafka;
 
+import com.aleks.avro.InventoryReservedEvent;
 import com.aleks.order.entity.Order;
 import com.aleks.order.entity.OrderStatus;
 import com.aleks.order.repository.OrderRepository;
-import com.aleks.shared.event.InventoryReservedEvent;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -26,13 +27,13 @@ public class InventoryReservedConsumer {
 
     log.info(
         "Received InventoryReservedEvent {}",
-        event.orderId()
+        event.getOrderId()
     );
 
     Order order =
         orderRepository
             .findById(
-                event.orderId()
+                UUID.fromString(event.getOrderId())
             )
             .orElse(null);
 

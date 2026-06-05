@@ -1,0 +1,24 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "NotificationFailedEvent",
+
+  "fields": [
+    {
+      "name": "notificationId",
+      "type": "string"
+    },
+    {
+      "name": "userId",
+      "type": "string"
+    },
+    {
+      "name": "reason",
+      "type": "string"
+    },
+    {
+      "name": "failedAt",
+      "type": "string"
+    }
+  ]
+}

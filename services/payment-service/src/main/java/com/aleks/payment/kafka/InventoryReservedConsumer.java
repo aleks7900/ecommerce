@@ -1,12 +1,12 @@
 package com.aleks.payment.kafka;
 
+import com.aleks.avro.InventoryReservedEvent;
+import com.aleks.avro.PaymentCompletedEvent;
 import com.aleks.payment.entity.Payment;
 import com.aleks.payment.service.PaymentService;
-import com.aleks.shared.event.InventoryReservedEvent;
-import com.aleks.shared.event.PaymentCompletedEvent;
-import com.aleks.shared.event.PaymentFailedEvent;
 import java.math.BigDecimal;
 import java.util.Random;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -38,12 +38,12 @@ public class InventoryReservedConsumer {
 
     log.info(
         "Received InventoryReservedEvent {}",
-        event.orderId()
+        event.getOrderId()
     );
 
     Payment payment =
         paymentService.createPayment(
-            event.orderId(),
+            UUID.fromString(event.getOrderId()),
             null,
             BigDecimal.valueOf(10.0)
         );
@@ -52,10 +52,16 @@ public class InventoryReservedConsumer {
 
     if (success) {
       PaymentCompletedEvent completedEvent =
-          PaymentCompletedEvent.builder()
-              .paymentId(payment.getId())
-              .orderId(event.orderId())
-              .completedAt(Instant.now())
+          PaymentCompletedEvent.newBuilder()
+              .setPaymentId(
+                  payment.getId().toString()
+              )
+              .setOrderId(
+                  event.getOrderId()
+              )
+              .setCompletedAt(
+                  Instant.now().toString()
+              )
               .build();
       paymentEventPublisher.sendPaymentCompleted(
           completedEvent

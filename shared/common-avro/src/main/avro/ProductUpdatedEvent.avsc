@@ -1,0 +1,24 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "ProductUpdatedEvent",
+
+  "fields": [
+    {
+      "name": "productId",
+      "type": "string"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "price",
+      "type": "double"
+    },
+    {
+      "name": "updatedAt",
+      "type": "string"
+    }
+  ]
+}

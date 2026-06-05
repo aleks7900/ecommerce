@@ -6,7 +6,6 @@ import com.aleks.product.entity.Product;
 import com.aleks.product.exception.ProductNotFoundException;
 import com.aleks.product.kafka.ProductEventPublisher;
 import com.aleks.product.repository.ProductRepository;
-import com.aleks.shared.event.ProductCreatedEvent;
 import com.aleks.shared.event.ProductStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;

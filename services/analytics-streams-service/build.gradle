@@ -37,6 +37,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    implementation project(":shared:common-avro")
+
+    implementation 'org.apache.avro:avro:1.11.4'
 }
 
 dependencyManagement {

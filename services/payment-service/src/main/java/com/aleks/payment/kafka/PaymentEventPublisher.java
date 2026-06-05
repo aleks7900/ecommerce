@@ -1,8 +1,8 @@
 package com.aleks.payment.kafka;
 
+import com.aleks.avro.PaymentCompletedEvent;
+import com.aleks.avro.PaymentFailedEvent;
 import com.aleks.outbox.service.OutboxPublisherService;
-import com.aleks.shared.event.PaymentCompletedEvent;
-import com.aleks.shared.event.PaymentFailedEvent;
 import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +22,14 @@ public class PaymentEventPublisher {
 
     outboxPublisherService.publish(
         "PAYMENT",
-        event.paymentId().toString(),
+        event.getPaymentId().toString(),
         "payment-completed",
         event
     );
 
     log.info(
         "PaymentCompletedEvent sent for order {}",
-        event.orderId()
+        event.getOrderId()
     );
   }
 
@@ -40,10 +40,16 @@ public class PaymentEventPublisher {
   ) {
 
     PaymentFailedEvent event =
-        PaymentFailedEvent.builder()
-            .orderId(orderId)
-            .amount(amount)
-            .reason(reason)
+        PaymentFailedEvent.newBuilder()
+            .setOrderId(
+                orderId.toString()
+            )
+            .setAmount(
+                amount.doubleValue()
+            )
+            .setReason(
+                reason
+            )
             .build();
 
     outboxPublisherService.publish(

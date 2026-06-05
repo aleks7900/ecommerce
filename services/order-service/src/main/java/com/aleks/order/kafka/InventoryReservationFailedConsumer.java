@@ -1,9 +1,10 @@
 package com.aleks.order.kafka;
 
+import com.aleks.avro.InventoryReservationFailedEvent;
 import com.aleks.order.entity.Order;
 import com.aleks.order.entity.OrderStatus;
 import com.aleks.order.repository.OrderRepository;
-import com.aleks.shared.event.InventoryReservationFailedEvent;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -26,20 +27,20 @@ public class InventoryReservationFailedConsumer {
 
     log.warn(
         "Received InventoryReservationFailedEvent for order {}. Reason: {}",
-        event.orderId(),
-        event.reason()
+        event.getOrderId(),
+        event.getReason()
     );
 
     Order order =
         orderRepository
-            .findById(event.orderId())
+            .findById(UUID.fromString(event.getOrderId()))
             .orElse(null);
 
     if (order == null) {
 
       log.error(
           "Order {} not found",
-          event.orderId()
+          event.getOrderId()
       );
 
       return;

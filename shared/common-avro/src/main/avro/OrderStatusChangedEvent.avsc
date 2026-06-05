@@ -1,0 +1,24 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "OrderStatusChangedEvent",
+
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "oldStatus",
+      "type": "string"
+    },
+    {
+      "name": "newStatus",
+      "type": "string"
+    },
+    {
+      "name": "changedAt",
+      "type": "string"
+    }
+  ]
+}

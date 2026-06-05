@@ -1,8 +1,9 @@
 package com.aleks.inventory.kafka;
 
+import com.aleks.avro.InventoryReleasedEvent;
 import com.aleks.inventory.entity.Inventory;
 import com.aleks.inventory.repository.InventoryRepository;
-import com.aleks.shared.event.InventoryReleasedEvent;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -25,13 +26,13 @@ public class InventoryReleasedConsumer {
 
     log.info(
         "Received InventoryReleasedEvent for order {}",
-        event.orderId()
+        event.getOrderId()
     );
 
     Inventory inventory =
         inventoryRepository
             .findByProductId(
-                event.productId()
+                UUID.fromString(event.getProductId())
             )
             .orElse(null);
 
@@ -39,7 +40,7 @@ public class InventoryReleasedConsumer {
 
       log.error(
           "Inventory not found for product {}",
-          event.productId()
+          event.getProductId()
       );
 
       return;
@@ -47,12 +48,12 @@ public class InventoryReleasedConsumer {
 
     inventory.setQuantity(
         inventory.getQuantity()
-            + event.quantity()
+            + event.getQuantity()
     );
 
     inventory.setReservedQuantity(
         inventory.getReservedQuantity()
-            - event.quantity()
+            - event.getQuantity()
     );
 
     inventoryRepository.save(

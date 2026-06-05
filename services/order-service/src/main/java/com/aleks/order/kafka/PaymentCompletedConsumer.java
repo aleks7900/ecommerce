@@ -1,11 +1,12 @@
 package com.aleks.order.kafka;
 
+import com.aleks.avro.OrderConfirmedEvent;
+import com.aleks.avro.PaymentCompletedEvent;
 import com.aleks.order.entity.Order;
 import com.aleks.order.entity.OrderStatus;
 import com.aleks.order.repository.OrderRepository;
 import com.aleks.outbox.service.OutboxPublisherService;
-import com.aleks.shared.event.OrderConfirmedEvent;
-import com.aleks.shared.event.PaymentCompletedEvent;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -32,13 +33,13 @@ public class PaymentCompletedConsumer {
 
     log.info(
         "Received PaymentCompletedEvent {}",
-        event.orderId()
+        event.getOrderId()
     );
 
     Order order =
         orderRepository
             .findById(
-                event.orderId()
+                UUID.fromString(event.getOrderId())
             )
             .orElse(null);
 
@@ -46,7 +47,7 @@ public class PaymentCompletedConsumer {
 
       log.error(
           "Order {} not found",
-          event.orderId()
+          event.getOrderId()
       );
 
       return;
@@ -59,17 +60,20 @@ public class PaymentCompletedConsumer {
     orderRepository.save(order);
 
     OrderConfirmedEvent confirmedEvent =
-        OrderConfirmedEvent
-            .builder()
-            .orderId(order.getId())
-            .confirmedAt(Instant.now())
+        OrderConfirmedEvent.newBuilder()
+            .setOrderId(
+                order.getId().toString()
+            )
+            .setConfirmedAt(
+                Instant.now().toString()
+            )
             .build();
 
     outboxPublisherService.publish(
         "ORDER",
         order.getId().toString(),
         "order-confirmed",
-        event
+        confirmedEvent
     );
 
     log.info(

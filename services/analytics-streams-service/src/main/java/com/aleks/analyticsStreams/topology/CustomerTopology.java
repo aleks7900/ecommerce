@@ -1,6 +1,6 @@
 package com.aleks.analyticsStreams.topology;
 
-import com.aleks.shared.event.OrderCreatedEvent;
+import com.aleks.avro.OrderCreatedEvent;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,7 @@ public class CustomerTopology {
 
         .groupBy(
             (key, event) ->
-                event.buyerId().toString()
+                event.getBuyerId()
         )
 
         .count()

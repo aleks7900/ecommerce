@@ -1,8 +1,9 @@
 package com.aleks.inventory.kafka;
 
+import com.aleks.avro.ProductCreatedEvent;
 import com.aleks.inventory.entity.Inventory;
 import com.aleks.inventory.repository.InventoryRepository;
-import com.aleks.shared.event.ProductCreatedEvent;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -25,13 +26,13 @@ public class ProductCreatedConsumer {
 
     log.info(
         "Received ProductCreatedEvent: {}",
-        event.productId()
+        event.getProductId()
     );
 
     Inventory inventory =
         Inventory.builder()
             .productId(
-                event.productId()
+                UUID.fromString(event.getProductId())
             )
             .quantity(0)
             .reservedQuantity(0)
@@ -43,7 +44,7 @@ public class ProductCreatedConsumer {
 
     log.info(
         "Inventory created for product {}",
-        event.productId()
+        event.getProductId()
     );
   }
 }

@@ -1,0 +1,32 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "ShipmentDeliveredEvent",
+
+  "fields": [
+    {
+      "name": "shipmentId",
+      "type": "string"
+    },
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "trackingNumber",
+      "type": "string"
+    },
+    {
+      "name": "recipientId",
+      "type": "string"
+    },
+    {
+      "name": "deliveryAddress",
+      "type": "string"
+    },
+    {
+      "name": "deliveredAt",
+      "type": "string"
+    }
+  ]
+}

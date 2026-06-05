@@ -1,0 +1,24 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "AuditEvent",
+
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"
+    },
+    {
+      "name": "userId",
+      "type": "string"
+    },
+    {
+      "name": "action",
+      "type": "string"
+    },
+    {
+      "name": "occurredAt",
+      "type": "string"
+    }
+  ]
+}

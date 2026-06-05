@@ -1,0 +1,20 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "OrderCancelledEvent",
+
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "reason",
+      "type": "string"
+    },
+    {
+      "name": "cancelledAt",
+      "type": "string"
+    }
+  ]
+}

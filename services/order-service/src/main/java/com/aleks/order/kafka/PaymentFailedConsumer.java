@@ -1,10 +1,11 @@
 package com.aleks.order.kafka;
 
+import com.aleks.avro.InventoryReleasedEvent;
+import com.aleks.avro.PaymentFailedEvent;
 import com.aleks.order.entity.Order;
 import com.aleks.order.entity.OrderStatus;
 import com.aleks.order.repository.OrderRepository;
-import com.aleks.shared.event.InventoryReleasedEvent;
-import com.aleks.shared.event.PaymentFailedEvent;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -35,19 +36,19 @@ public class PaymentFailedConsumer {
 
     log.warn(
         "Received PaymentFailedEvent for order {}",
-        event.orderId()
+        event.getOrderId()
     );
 
     Order order =
         orderRepository.findById(
-            event.orderId()
+            UUID.fromString(event.getOrderId())
         ).orElse(null);
 
     if (order == null) {
 
       log.error(
           "Order {} not found",
-          event.orderId()
+          event.getOrderId()
       );
 
       return;
@@ -60,11 +61,19 @@ public class PaymentFailedConsumer {
     orderRepository.save(order);
 
     InventoryReleasedEvent releasedEvent =
-        InventoryReleasedEvent.builder()
-            .orderId(order.getId())
-            .productId(order.getProductId())
-            .quantity(order.getQuantity())
-            .releasedAt(Instant.now())
+        InventoryReleasedEvent.newBuilder()
+            .setOrderId(
+                order.getId().toString()
+            )
+            .setProductId(
+                order.getProductId().toString()
+            )
+            .setQuantity(
+                order.getQuantity()
+            )
+            .setReleasedAt(
+                Instant.now().toString()
+            )
             .build();
 
     kafkaTemplate.send(

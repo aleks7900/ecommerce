@@ -1,6 +1,6 @@
 package com.aleks.analyticsStreams.topology;
 
-import com.aleks.shared.event.OrderCreatedEvent;
+import com.aleks.avro.OrderCreatedEvent;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
@@ -67,7 +67,7 @@ public class SalesAnalyticsTopology {
 
         .groupBy(
             (key, event) ->
-                event.productId().toString()
+                event.getProductId()
         )
 
         .count(

@@ -5,7 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+    "com.aleks.product",
+    "com.aleks.outbox"
+})
 @EnableJpaRepositories({
     "com.aleks.product.repository",
     "com.aleks.outbox.repository"

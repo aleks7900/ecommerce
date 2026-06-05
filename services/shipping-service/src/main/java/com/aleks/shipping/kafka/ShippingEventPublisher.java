@@ -1,8 +1,8 @@
-package com.aleks.shipping.event;
+package com.aleks.shipping.kafka;
 
+import com.aleks.avro.ShipmentCreatedEvent;
+import com.aleks.avro.ShipmentDeliveredEvent;
 import com.aleks.outbox.service.OutboxPublisherService;
-import com.aleks.shared.event.ShipmentCreatedEvent;
-import com.aleks.shared.event.ShipmentDeliveredEvent;
 import com.aleks.shipping.entity.Shipment;
 import com.aleks.shipping.entity.ShipmentStatus;
 import com.aleks.shipping.exception.ShipmentNotFoundException;
@@ -31,7 +31,7 @@ public class ShippingEventPublisher {
 
       outboxPublisherService.publish(
           "SHIPMENT",
-          event.shipmentId().toString(),
+          event.getShipmentId(),
           "shipment-created",
 
           event
@@ -39,7 +39,7 @@ public class ShippingEventPublisher {
 
       log.info(
           "ShipmentCreatedEvent saved to outbox. shipmentId={}",
-          event.shipmentId()
+          event.getShipmentId()
       );
 
     } catch (Exception ex) {
@@ -72,15 +72,18 @@ public class ShippingEventPublisher {
     );
 
     ShipmentDeliveredEvent event =
-        ShipmentDeliveredEvent.builder()
-            .shipmentId(
-                shipment.getId()
+        ShipmentDeliveredEvent.newBuilder()
+            .setShipmentId(
+                shipment.getId().toString()
             )
-            .orderId(
-                shipment.getOrderId()
+            .setOrderId(
+                shipment.getOrderId().toString()
             )
-            .deliveredAt(
-                Instant.now()
+            .setTrackingNumber(
+                shipment.getTrackingNumber()
+            )
+            .setDeliveredAt(
+                Instant.now().toString()
             )
             .build();
 

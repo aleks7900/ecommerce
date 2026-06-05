@@ -29,4 +29,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     implementation project(":shared:common-kafka")
+
+    implementation project(":shared:common-avro")
 }

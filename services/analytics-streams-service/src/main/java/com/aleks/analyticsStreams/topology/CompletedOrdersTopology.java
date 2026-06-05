@@ -1,7 +1,7 @@
 package com.aleks.analyticsStreams.topology;
 
-import com.aleks.shared.event.OrderCreatedEvent;
-import com.aleks.shared.event.PaymentCompletedEvent;
+import com.aleks.avro.OrderCreatedEvent;
+import com.aleks.avro.PaymentCompletedEvent;
 import lombok.Builder;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
@@ -42,13 +42,13 @@ public class CompletedOrdersTopology {
             CompletedOrderMetric
                 .builder()
                 .orderId(
-                    order.orderId()
+                    UUID.fromString(order.getOrderId())
                 )
                 .productId(
-                    order.productId()
+                    UUID.fromString(order.getProductId())
                 )
                 .amount(
-                    payment.amount()
+                    BigDecimal.valueOf(payment.getAmount())
                 )
                 .build(),
 

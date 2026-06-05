@@ -1,9 +1,9 @@
 package com.aleks.notification.kafka;
 
+import com.aleks.avro.NotificationSentEvent;
 import com.aleks.outbox.entity.OutboxEvent;
 import com.aleks.outbox.entity.OutboxStatus;
 import com.aleks.outbox.repository.OutboxEventRepository;
-import com.aleks.shared.event.NotificationSentEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ public class NotificationEventPublisher {
   private static final String NOTIFICATION_SENT_TOPIC =
       "notification-sent";
 
-  private final OutboxEventRepository repository;
+  private final OutboxEventRepository outboxEventRepository;
 
   private final ObjectMapper objectMapper;
 
@@ -27,13 +27,13 @@ public class NotificationEventPublisher {
 
     saveOutboxEvent(
         NOTIFICATION_SENT_TOPIC,
-        event.notificationId().toString(),
+        event.getNotificationId(),
         event
     );
 
     log.info(
         "NotificationSentEvent saved to outbox. notificationId={}",
-        event.notificationId()
+        event.getNotificationId()
     );
   }
 
@@ -45,7 +45,7 @@ public class NotificationEventPublisher {
 
     try {
 
-      repository.save(
+      outboxEventRepository.save(
 
           OutboxEvent.builder()
               .aggregateType("NOTIFICATION")

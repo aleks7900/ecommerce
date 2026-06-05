@@ -1,0 +1,20 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "UserRegisteredEvent",
+
+  "fields": [
+    {
+      "name": "userId",
+      "type": "string"
+    },
+    {
+      "name": "email",
+      "type": "string"
+    },
+    {
+      "name": "registeredAt",
+      "type": "string"
+    }
+  ]
+}

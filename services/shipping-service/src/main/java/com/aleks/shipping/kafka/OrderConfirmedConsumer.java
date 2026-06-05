@@ -1,10 +1,10 @@
 package com.aleks.shipping.kafka;
 
-import com.aleks.shared.event.OrderConfirmedEvent;
-import com.aleks.shared.event.ShipmentCreatedEvent;
+import com.aleks.avro.OrderConfirmedEvent;
+import com.aleks.avro.ShipmentCreatedEvent;
 import com.aleks.shipping.entity.Shipment;
-import com.aleks.shipping.event.ShippingEventPublisher;
 import com.aleks.shipping.service.ShippingService;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class OrderConfirmedConsumer {
 
             Shipment.builder()
                 .orderId(
-                    event.orderId()
+                    UUID.fromString(event.getOrderId())
                 )
                 .address(
                     "Customer Address"
@@ -42,15 +42,15 @@ public class OrderConfirmedConsumer {
 
     producer.publishShipmentCreated(
 
-        ShipmentCreatedEvent.builder()
-            .shipmentId(
-                shipment.getId()
+        ShipmentCreatedEvent.newBuilder()
+            .setShipmentId(
+                String.valueOf(shipment.getId())
             )
-            .orderId(
-                shipment.getOrderId()
+            .setOrderId(
+                String.valueOf(shipment.getOrderId())
             )
-            .createdAt(
-                Instant.now()
+            .setCreatedAt(
+                String.valueOf(Instant.now())
             )
             .build()
     );

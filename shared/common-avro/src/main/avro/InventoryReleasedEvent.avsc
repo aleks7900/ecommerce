@@ -1,0 +1,28 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "InventoryReleasedEvent",
+
+  "fields": [
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "productId",
+      "type": "string"
+    },
+    {
+      "name": "quantity",
+      "type": "int"
+    },
+    {
+      "name": "reason",
+      "type": "string"
+    },
+    {
+      "name": "releasedAt",
+      "type": "string"
+    }
+  ]
+}

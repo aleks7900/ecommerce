@@ -1,10 +1,11 @@
 package com.aleks.notification.kafka;
 
+import com.aleks.avro.NotificationSentEvent;
+import com.aleks.avro.OrderConfirmedEvent;
 import com.aleks.notification.entity.Notification;
 import com.aleks.notification.service.EmailNotificationService;
 import com.aleks.notification.service.NotificationService;
-import com.aleks.shared.event.NotificationSentEvent;
-import com.aleks.shared.event.OrderConfirmedEvent;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -32,17 +33,17 @@ public class OrderConfirmedConsumer {
 
     log.info(
         "Received OrderConfirmedEvent {}",
-        event.orderId()
+        event.getOrderId()
     );
 
     Notification notification =
         Notification.builder()
-            .orderId(event.orderId())
+            .orderId(UUID.fromString(event.getOrderId()))
             .recipient("customer@email.com")
             .subject("Order confirmed")
             .message(
                 "Your order "
-                    + event.orderId()
+                    + event.getOrderId()
                     + " has been confirmed."
             )
             .build();
@@ -57,18 +58,18 @@ public class OrderConfirmedConsumer {
         );
 
     NotificationSentEvent sentEvent =
-        NotificationSentEvent.builder()
-            .notificationId(
-                savedNotification.getId()
+        NotificationSentEvent.newBuilder()
+            .setNotificationId(
+                savedNotification.getId().toString()
             )
-            .orderId(
-                savedNotification.getOrderId()
+            .setOrderId(
+                savedNotification.getOrderId().toString()
             )
-            .recipient(
+            .setRecipient(
                 savedNotification.getRecipient()
             )
-            .sentAt(
-                savedNotification.getCreatedAt()
+            .setSentAt(
+                savedNotification.getCreatedAt().toString()
             )
             .build();
 

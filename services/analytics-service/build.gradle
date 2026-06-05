@@ -15,11 +15,17 @@ java {
 
 repositories {
     mavenCentral()
+
+    maven {
+        url "https://packages.confluent.io/maven/"
+    }
 }
 
 dependencies {
 
     implementation project(':shared:common-kafka')
+
+    implementation project(':shared:common-avro')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
@@ -49,6 +55,12 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    implementation 'io.confluent:kafka-avro-serializer:7.6.1'
+
+    implementation 'org.apache.avro:avro:1.11.4'
 }
 
 tasks.named('test') {

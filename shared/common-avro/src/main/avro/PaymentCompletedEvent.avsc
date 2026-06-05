@@ -1,0 +1,28 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "PaymentCompletedEvent",
+
+  "fields": [
+    {
+      "name": "paymentId",
+      "type": "string"
+    },
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "amount",
+      "type": "double"
+    },
+    {
+      "name": "completedAt",
+      "type": "string"
+    },
+    {
+      "name": "paidAt",
+      "type": "string"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 package com.aleks.analyticsStreams.topology;
 
-import com.aleks.shared.event.PaymentCompletedEvent;
+import com.aleks.avro.PaymentCompletedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
@@ -36,7 +36,7 @@ public class RevenueTopology {
             (key, payment, total) ->
 
                 total.add(
-                    payment.amount()
+                    BigDecimal.valueOf(payment.getAmount())
                 )
 
         )

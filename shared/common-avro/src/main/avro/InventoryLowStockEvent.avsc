@@ -1,0 +1,20 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "InventoryLowStockEvent",
+
+  "fields": [
+    {
+      "name": "productId",
+      "type": "string"
+    },
+    {
+      "name": "remainingQuantity",
+      "type": "int"
+    },
+    {
+      "name": "occurredAt",
+      "type": "string"
+    }
+  ]
+}

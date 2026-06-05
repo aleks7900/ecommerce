@@ -47,6 +47,10 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     implementation project(":shared:outbox-service")
+
+    implementation project(":shared:common-avro")
+
+    implementation 'org.apache.avro:avro:1.11.4'
 }
 
 tasks.named('test') {

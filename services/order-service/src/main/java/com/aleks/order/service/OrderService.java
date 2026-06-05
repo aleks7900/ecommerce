@@ -1,12 +1,12 @@
 package com.aleks.order.service;
 
+import com.aleks.avro.OrderCreatedEvent;
 import com.aleks.order.dto.request.CreateOrderRequest;
 import com.aleks.order.entity.Order;
 import com.aleks.order.entity.OrderStatus;
 import com.aleks.order.exception.OrderNotFoundException;
 import com.aleks.order.kafka.OrderEventPublisher;
 import com.aleks.order.repository.OrderRepository;
-import com.aleks.shared.event.OrderCreatedEvent;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -37,13 +37,25 @@ public class OrderService {
         orderRepository.save(order);
 
     OrderCreatedEvent event =
-        OrderCreatedEvent.builder()
-            .orderId(savedOrder.getId())
-            .productId(savedOrder.getProductId())
-            .buyerId(savedOrder.getBuyerId())
-            .quantity(savedOrder.getQuantity())
-            .totalPrice(savedOrder.getTotalPrice())
-            .createdAt(Instant.now())
+        OrderCreatedEvent.newBuilder()
+            .setOrderId(
+                savedOrder.getId().toString()
+            )
+            .setProductId(
+                savedOrder.getProductId().toString()
+            )
+            .setBuyerId(
+                savedOrder.getBuyerId().toString()
+            )
+            .setQuantity(
+                savedOrder.getQuantity()
+            )
+            .setTotalPrice(
+                savedOrder.getTotalPrice().doubleValue()
+            )
+            .setCreatedAt(
+                Instant.now().toString()
+            )
             .build();
 
     orderEventPublisher.publishOrderCreatedEvent(

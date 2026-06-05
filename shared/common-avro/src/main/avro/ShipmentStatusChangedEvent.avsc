@@ -1,0 +1,24 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "ShipmentStatusChangedEvent",
+
+  "fields": [
+    {
+      "name": "shipmentId",
+      "type": "string"
+    },
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "updatedAt",
+      "type": "string"
+    }
+  ]
+}

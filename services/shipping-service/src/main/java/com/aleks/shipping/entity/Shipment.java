@@ -38,6 +38,8 @@ public class Shipment {
 
   private Instant createdAt;
 
+  private String  trackingNumber;
+
   @PrePersist
   public void prePersist() {
     createdAt = Instant.now();

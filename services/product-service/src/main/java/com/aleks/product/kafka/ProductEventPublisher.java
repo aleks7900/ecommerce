@@ -1,11 +1,10 @@
 package com.aleks.product.kafka;
 
+import com.aleks.avro.ProductCreatedEvent;
+import com.aleks.avro.ProductUpdatedEvent;
 import com.aleks.outbox.service.OutboxPublisherService;
-import com.aleks.shared.event.ProductCreatedEvent;
-import com.aleks.shared.event.ProductUpdatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -27,12 +26,12 @@ public class ProductEventPublisher {
 
     log.info(
         "Publishing ProductCreatedEvent for product {}",
-        event.productId()
+        event.getProductId()
     );
 
     outboxPublisherService.publish(
         "PRODUCT",
-        String.valueOf(event.productId()),
+        String.valueOf(event.getProductId()),
         PRODUCT_CREATED_TOPIC,
         event
     );
@@ -44,12 +43,12 @@ public class ProductEventPublisher {
 
     log.info(
         "Publishing ProductUpdatedEvent for product {}",
-        event.productId()
+        event.getProductId()
     );
 
     outboxPublisherService.publish(
         "PRODUCT",
-        String.valueOf(event.productId()),
+        String.valueOf(event.getProductId()),
         PRODUCT_UPDATED_TOPIC,
         event
     );

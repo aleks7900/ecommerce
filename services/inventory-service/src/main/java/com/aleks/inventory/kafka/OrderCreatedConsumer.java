@@ -1,13 +1,14 @@
 package com.aleks.inventory.kafka;
 
+import com.aleks.avro.InventoryReservationFailedEvent;
+import com.aleks.avro.InventoryReservedEvent;
+import com.aleks.avro.OrderCreatedEvent;
 import com.aleks.inventory.entity.Inventory;
 import com.aleks.inventory.repository.InventoryRepository;
 import com.aleks.inventory.service.InventoryService;
 import com.aleks.outbox.service.OutboxPublisherService;
-import com.aleks.shared.event.InventoryReservationFailedEvent;
-import com.aleks.shared.event.InventoryReservedEvent;
-import com.aleks.shared.event.OrderCreatedEvent;
 import java.time.Instant;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -40,13 +41,13 @@ public class OrderCreatedConsumer {
 
     log.info(
         "Received OrderCreatedEvent {}",
-        event.orderId()
+        event.getOrderId()
     );
 
     Inventory inventory =
         inventoryRepository
             .findByProductId(
-                event.productId()
+                UUID.fromString(event.getProductId())
             )
             .orElse(null);
 
@@ -61,7 +62,7 @@ public class OrderCreatedConsumer {
     }
 
     if (inventory.getQuantity()
-        < event.quantity()) {
+        < event.getQuantity()) {
 
       publishFailed(
           event,
@@ -73,48 +74,47 @@ public class OrderCreatedConsumer {
 
     inventory.setQuantity(
         inventory.getQuantity()
-            - event.quantity()
+            - event.getQuantity()
     );
 
     inventory.setReservedQuantity(
         inventory.getReservedQuantity()
-            + event.quantity()
+            + event.getQuantity()
     );
 
     inventoryService.reserveStock(
 
-        event.productId(),
+        UUID.fromString(event.getProductId()),
 
-        event.quantity()
+        event.getQuantity()
     );
 
     InventoryReservedEvent reservedEvent =
-        InventoryReservedEvent
-            .builder()
-            .orderId(
-                event.orderId()
+        InventoryReservedEvent.newBuilder()
+            .setOrderId(
+                event.getOrderId()
             )
-            .productId(
-                event.productId()
+            .setProductId(
+                event.getProductId()
             )
-            .quantity(
-                event.quantity()
+            .setQuantity(
+                event.getQuantity()
             )
-            .reservedAt(
-                Instant.now()
+            .setReservedAt(
+                Instant.now().toString()
             )
             .build();
 
     outboxPublisherService.publish(
         "INVENTORY",
-        event.orderId().toString(),
+        event.getOrderId(),
         INVENTORY_RESERVED_TOPIC,
         reservedEvent
     );
 
     log.info(
         "Inventory reserved for order {}",
-        event.orderId()
+        event.getOrderId()
     );
   }
 
@@ -124,33 +124,31 @@ public class OrderCreatedConsumer {
   ) {
 
     InventoryReservationFailedEvent failedEvent =
-        InventoryReservationFailedEvent
-            .builder()
-            .orderId(
-                event.orderId()
+        InventoryReservationFailedEvent.newBuilder()
+            .setOrderId(
+                event.getOrderId().toString()
             )
-            .productId(
-                event.productId()
+            .setProductId(
+                event.getProductId().toString()
             )
-            .requestedQuantity(
-                event.quantity()
+            .setReason(
+                reason
             )
-            .reason(reason)
-            .failedAt(
-                Instant.now()
+            .setFailedAt(
+                Instant.now().toString()
             )
             .build();
 
     outboxPublisherService.publish(
         "INVENTORY",
-        event.orderId().toString(),
+        event.getOrderId().toString(),
         INVENTORY_RESERVATION_FAILED_TOPIC,
         failedEvent
     );
 
     log.warn(
         "Inventory reservation failed for order {}. Reason: {}",
-        event.orderId(),
+        event.getOrderId(),
         reason
     );
   }

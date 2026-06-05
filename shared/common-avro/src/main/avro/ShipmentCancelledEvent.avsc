@@ -1,0 +1,20 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "ShipmentCancelledEvent",
+
+  "fields": [
+    {
+      "name": "shipmentId",
+      "type": "string"
+    },
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "cancelledAt",
+      "type": "string"
+    }
+  ]
+}

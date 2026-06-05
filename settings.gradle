@@ -24,6 +24,7 @@ include(
 
         "shared:common-security",
         "shared:common-cache",
+        "shared:common-avro",
         "shared:common-kafka",
         "shared:common-exceptions",
         "shared:common-observability"

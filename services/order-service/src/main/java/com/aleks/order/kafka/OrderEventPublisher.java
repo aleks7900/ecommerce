@@ -1,10 +1,10 @@
 package com.aleks.order.kafka;
 
+import com.aleks.avro.OrderConfirmedEvent;
+import com.aleks.avro.OrderCreatedEvent;
 import com.aleks.outbox.entity.OutboxEvent;
 import com.aleks.outbox.entity.OutboxStatus;
 import com.aleks.outbox.repository.OutboxEventRepository;
-import com.aleks.shared.event.OrderConfirmedEvent;
-import com.aleks.shared.event.OrderCreatedEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class OrderEventPublisher {
     save(
         "ORDER",
         "order-created",
-        event.orderId().toString(),
+        event.getOrderId(),
         event
     );
   }
@@ -38,7 +38,7 @@ public class OrderEventPublisher {
     save(
         "ORDER",
         "order-confirmed",
-        event.orderId().toString(),
+        event.getOrderId(),
         event
     );
   }

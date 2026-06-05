@@ -1,7 +1,7 @@
 package com.aleks.analytics.kafka;
 
 import com.aleks.analytics.service.AnalyticsService;
-import com.aleks.shared.event.OrderCreatedEvent;
+import com.aleks.avro.OrderCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;

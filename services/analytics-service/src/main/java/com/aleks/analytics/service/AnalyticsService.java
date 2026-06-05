@@ -1,7 +1,7 @@
 package com.aleks.analytics.service;
 
 import com.aleks.analytics.dto.response.AnalyticsResponse;
-import com.aleks.shared.event.OrderCreatedEvent;
+import com.aleks.avro.OrderCreatedEvent;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -41,7 +41,7 @@ public class AnalyticsService {
     redisTemplate.opsForZSet()
         .incrementScore(
             "top-products",
-            orderCreatedEvent.productId().toString(),
+            orderCreatedEvent.getProductId(),
             1
         );
 

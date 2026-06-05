@@ -1,0 +1,28 @@
+{
+  "namespace": "com.aleks.avro",
+  "type": "record",
+  "name": "PaymentFailedEvent",
+
+  "fields": [
+    {
+      "name": "paymentId",
+      "type": "string"
+    },
+    {
+      "name": "orderId",
+      "type": "string"
+    },
+    {
+      "name": "reason",
+      "type": "string"
+    },
+    {
+      "name": "failedAt",
+      "type": "string"
+    },
+    {
+      "name": "amount",
+      "type": "double"
+    }
+  ]
+}
