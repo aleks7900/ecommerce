@@ -3,6 +3,7 @@ package com.aleks.order.kafka;
 import com.aleks.order.entity.Order;
 import com.aleks.order.entity.OrderStatus;
 import com.aleks.order.repository.OrderRepository;
+import com.aleks.outbox.service.OutboxPublisherService;
 import com.aleks.shared.event.OrderConfirmedEvent;
 import com.aleks.shared.event.PaymentCompletedEvent;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class PaymentCompletedConsumer {
 
   private final OrderRepository orderRepository;
 
-  private final OrderEventPublisher orderEventPublisher;
+  private final OutboxPublisherService outboxPublisherService;
 
   @KafkaListener(
       topics = "payment-completed",
@@ -64,10 +65,12 @@ public class PaymentCompletedConsumer {
             .confirmedAt(Instant.now())
             .build();
 
-    orderEventPublisher
-        .publishOrderConfirmedEvent(
-            confirmedEvent
-        );
+    outboxPublisherService.publish(
+        "ORDER",
+        order.getId().toString(),
+        "order-confirmed",
+        event
+    );
 
     log.info(
         "Order {} confirmed",

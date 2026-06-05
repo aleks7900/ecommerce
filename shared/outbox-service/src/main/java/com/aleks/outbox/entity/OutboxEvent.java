@@ -25,6 +25,8 @@ public class OutboxEvent {
 
   private String topic;
 
+  private String eventType;
+
   @Column(columnDefinition = "TEXT")
   private String payload;
 

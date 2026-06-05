@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OrderEventPublisher {
 
-  private final OutboxEventRepository repository;
+  private final OutboxEventRepository outboxEventRepository;
 
   private final ObjectMapper objectMapper;
 
@@ -52,7 +52,7 @@ public class OrderEventPublisher {
 
     try {
 
-      repository.save(
+      outboxEventRepository.save(
 
           OutboxEvent.builder()
               .aggregateType(

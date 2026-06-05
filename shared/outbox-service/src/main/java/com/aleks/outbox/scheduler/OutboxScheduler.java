@@ -11,19 +11,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OutboxScheduler {
 
-  private final OutboxEventRepository repository;
+  private final OutboxEventRepository outboxEventRepository;
 
-  private final OutboxPublisherService publisher;
+  private final OutboxPublisherService outboxPublisherService;
 
   @Scheduled(
       fixedDelay = 5000
   )
   public void processOutbox() {
 
-    repository.findByStatus(
+    outboxEventRepository.findByStatus(
         OutboxStatus.NEW
     ).forEach(
-        publisher::publish
+        outboxPublisherService::publish
     );
   }
 }

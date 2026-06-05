@@ -1,10 +1,15 @@
 package com.aleks.shipping.event;
 
-import com.aleks.outbox.entity.OutboxEvent;
-import com.aleks.outbox.entity.OutboxStatus;
-import com.aleks.outbox.repository.OutboxEventRepository;
+import com.aleks.outbox.service.OutboxPublisherService;
 import com.aleks.shared.event.ShipmentCreatedEvent;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.aleks.shared.event.ShipmentDeliveredEvent;
+import com.aleks.shipping.entity.Shipment;
+import com.aleks.shipping.entity.ShipmentStatus;
+import com.aleks.shipping.exception.ShipmentNotFoundException;
+import com.aleks.shipping.repository.ShipmentRepository;
+import jakarta.transaction.Transactional;
+import java.time.Instant;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,9 +19,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ShippingEventPublisher {
 
-  private final OutboxEventRepository repository;
+  private final OutboxPublisherService outboxPublisherService;
 
-  private final ObjectMapper objectMapper;
+  private final ShipmentRepository repository;
 
   public void publishShipmentCreated(
       ShipmentCreatedEvent event
@@ -24,25 +29,12 @@ public class ShippingEventPublisher {
 
     try {
 
-      repository.save(
+      outboxPublisherService.publish(
+          "SHIPMENT",
+          event.shipmentId().toString(),
+          "shipment-created",
 
-          OutboxEvent.builder()
-              .aggregateType("SHIPMENT")
-              .aggregateId(
-                  event.shipmentId().toString()
-              )
-              .topic(
-                  "shipment-created"
-              )
-              .payload(
-                  objectMapper.writeValueAsString(
-                      event
-                  )
-              )
-              .status(
-                  OutboxStatus.NEW
-              )
-              .build()
+          event
       );
 
       log.info(
@@ -57,5 +49,46 @@ public class ShippingEventPublisher {
           ex
       );
     }
+  }
+
+  @Transactional
+  public void markAsDelivered(
+      UUID shipmentId
+  ) {
+
+    Shipment shipment =
+        repository.findById(
+            shipmentId
+        ).orElseThrow(
+            ()-> new ShipmentNotFoundException("Shipment with id: " + shipmentId)
+        );
+
+    shipment.setStatus(
+        ShipmentStatus.DELIVERED
+    );
+
+    repository.save(
+        shipment
+    );
+
+    ShipmentDeliveredEvent event =
+        ShipmentDeliveredEvent.builder()
+            .shipmentId(
+                shipment.getId()
+            )
+            .orderId(
+                shipment.getOrderId()
+            )
+            .deliveredAt(
+                Instant.now()
+            )
+            .build();
+
+    outboxPublisherService.publish(
+        "SHIPMENT",
+        shipment.getId().toString(),
+        "shipment-delivered",
+        event
+    );
   }
 }

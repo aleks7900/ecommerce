@@ -7,12 +7,11 @@ import com.aleks.order.exception.OrderNotFoundException;
 import com.aleks.order.kafka.OrderEventPublisher;
 import com.aleks.order.repository.OrderRepository;
 import com.aleks.shared.event.OrderCreatedEvent;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +46,9 @@ public class OrderService {
             .createdAt(Instant.now())
             .build();
 
-    orderEventPublisher
-        .publishOrderCreatedEvent(event);
+    orderEventPublisher.publishOrderCreatedEvent(
+        event
+    );
 
     return savedOrder;
   }

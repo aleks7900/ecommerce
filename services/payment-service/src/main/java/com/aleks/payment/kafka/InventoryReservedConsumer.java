@@ -4,6 +4,9 @@ import com.aleks.payment.entity.Payment;
 import com.aleks.payment.service.PaymentService;
 import com.aleks.shared.event.InventoryReservedEvent;
 import com.aleks.shared.event.PaymentCompletedEvent;
+import com.aleks.shared.event.PaymentFailedEvent;
+import java.math.BigDecimal;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -42,18 +45,26 @@ public class InventoryReservedConsumer {
         paymentService.createPayment(
             event.orderId(),
             null,
-            null
+            BigDecimal.valueOf(10.0)
         );
 
-    PaymentCompletedEvent completedEvent =
-        PaymentCompletedEvent.builder()
-            .paymentId(payment.getId())
-            .orderId(event.orderId())
-            .completedAt(Instant.now())
-            .build();
+    boolean success = new Random().nextBoolean();
 
-    paymentEventPublisher.sendPaymentCompleted(
-        completedEvent
-    );
+    if (success) {
+      PaymentCompletedEvent completedEvent =
+          PaymentCompletedEvent.builder()
+              .paymentId(payment.getId())
+              .orderId(event.orderId())
+              .completedAt(Instant.now())
+              .build();
+      paymentEventPublisher.sendPaymentCompleted(
+          completedEvent
+      );
+
+    } else {
+      paymentEventPublisher.publishPaymentFailed(
+          payment.getOrderId(), payment.getAmount(), "fail"
+      );
+    }
   }
 }
