@@ -1,5 +1,6 @@
 package com.aleks.product.kafka;
 
+import com.aleks.outbox.service.OutboxPublisherService;
 import com.aleks.shared.event.ProductCreatedEvent;
 import com.aleks.shared.event.ProductUpdatedEvent;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class ProductEventPublisher {
   private static final String PRODUCT_UPDATED_TOPIC =
       "product-updated";
 
-  private final KafkaTemplate<String, Object> kafkaTemplate;
+  private final OutboxPublisherService outboxPublisherService;
 
   public void sendProductCreatedEvent(
       ProductCreatedEvent event
@@ -29,9 +30,10 @@ public class ProductEventPublisher {
         event.productId()
     );
 
-    kafkaTemplate.send(
+    outboxPublisherService.publish(
+        "PRODUCT",
+        String.valueOf(event.productId()),
         PRODUCT_CREATED_TOPIC,
-        event.productId().toString(),
         event
     );
   }
@@ -45,9 +47,10 @@ public class ProductEventPublisher {
         event.productId()
     );
 
-    kafkaTemplate.send(
+    outboxPublisherService.publish(
+        "PRODUCT",
+        String.valueOf(event.productId()),
         PRODUCT_UPDATED_TOPIC,
-        event.productId().toString(),
         event
     );
   }

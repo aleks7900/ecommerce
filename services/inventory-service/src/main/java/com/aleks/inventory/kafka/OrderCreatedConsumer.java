@@ -2,16 +2,15 @@ package com.aleks.inventory.kafka;
 
 import com.aleks.inventory.entity.Inventory;
 import com.aleks.inventory.repository.InventoryRepository;
+import com.aleks.outbox.service.OutboxPublisherService;
 import com.aleks.shared.event.InventoryReservationFailedEvent;
 import com.aleks.shared.event.InventoryReservedEvent;
 import com.aleks.shared.event.OrderCreatedEvent;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-
-import java.time.Instant;
 
 @Slf4j
 @Component
@@ -26,7 +25,7 @@ public class OrderCreatedConsumer {
 
   private final InventoryRepository inventoryRepository;
 
-  private final KafkaTemplate<String, Object> kafkaTemplate;
+  private final OutboxPublisherService outboxPublisherService;
 
   @KafkaListener(
       topics = "order-created",
@@ -100,9 +99,10 @@ public class OrderCreatedConsumer {
             )
             .build();
 
-    kafkaTemplate.send(
-        INVENTORY_RESERVED_TOPIC,
+    outboxPublisherService.publish(
+        "INVENTORY",
         event.orderId().toString(),
+        INVENTORY_RESERVED_TOPIC,
         reservedEvent
     );
 
@@ -135,9 +135,10 @@ public class OrderCreatedConsumer {
             )
             .build();
 
-    kafkaTemplate.send(
-        INVENTORY_RESERVATION_FAILED_TOPIC,
+    outboxPublisherService.publish(
+        "INVENTORY",
         event.orderId().toString(),
+        INVENTORY_RESERVATION_FAILED_TOPIC,
         failedEvent
     );
 

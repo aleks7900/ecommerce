@@ -1,53 +1,73 @@
 package com.aleks.outbox.service;
 
 import com.aleks.outbox.entity.OutboxEvent;
-import com.aleks.outbox.entity.OutboxStatus;
 import com.aleks.outbox.repository.OutboxEventRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OutboxPublisherService {
 
-  private final KafkaTemplate<String, String>
-      kafkaTemplate;
-
   private final OutboxEventRepository repository;
 
+  private final ObjectMapper objectMapper;
+
   public void publish(
-      OutboxEvent event
+
+      String aggregateType,
+
+      String aggregateId,
+
+      String eventType,
+
+      Object event
   ) {
 
     try {
 
-      kafkaTemplate.send(
-          event.getTopic(),
-          event.getPayload()
-      );
+      repository.save(
 
-      event.setStatus(
-          OutboxStatus.SENT
-      );
+          OutboxEvent.builder()
 
-      repository.save(event);
+              .aggregateType(
+                  aggregateType
+              )
+
+              .aggregateId(
+                  aggregateId
+              )
+
+              .eventType(
+                  eventType
+              )
+
+              .payload(
+                  objectMapper.writeValueAsString(
+                      event
+                  )
+              )
+
+              .createdAt(
+                  Instant.now()
+              )
+
+              .build()
+      );
 
     } catch (Exception ex) {
 
-      event.setStatus(
-          OutboxStatus.FAILED
-      );
-
-      repository.save(event);
-
-      log.error(
-          "Failed to publish {}",
-          event.getId(),
+      throw new RuntimeException(
+          "Failed to save outbox event",
           ex
       );
     }
+  }
+
+  public void publish(OutboxEvent outboxEvent) {
+    repository.save(outboxEvent);
   }
 }

@@ -5,6 +5,7 @@ import com.aleks.shipping.entity.Shipment;
 import com.aleks.shipping.repository.ShipmentRepository;
 import com.aleks.shipping.service.ShippingService;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,5 +46,15 @@ public class ShippingController {
   public List<Shipment> findAll() {
 
     return shipmentRepository.findAll();
+  }
+
+  @PostMapping("/{shipmentId}/deliver")
+  public void deliver(
+      @PathVariable UUID shipmentId
+  ) {
+
+    shippingService.markAsDelivered(
+        shipmentId
+    );
   }
 }
