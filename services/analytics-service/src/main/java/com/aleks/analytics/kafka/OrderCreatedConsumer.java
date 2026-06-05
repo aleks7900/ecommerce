@@ -20,6 +20,6 @@ public class OrderCreatedConsumer {
       OrderCreatedEvent event
   ) {
 
-    analyticsService.orderCreated();
+    analyticsService.orderCreated(event);
   }
 }

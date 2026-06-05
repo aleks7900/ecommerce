@@ -9,11 +9,14 @@ import com.aleks.product.repository.ProductRepository;
 import com.aleks.shared.event.ProductCreatedEvent;
 import com.aleks.shared.event.ProductStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +50,11 @@ public class ProductService {
     return save;
   }
 
+  @Cacheable(
+      value = "products",
+      key = "#id"
+  )
+  @Transactional(readOnly = true)
   public Product getById(UUID id) {
 
     return productRepository.findById(id)
@@ -62,6 +70,11 @@ public class ProductService {
     return productRepository.findAll();
   }
 
+  @CacheEvict(
+      value = "products",
+      key = "#id"
+  )
+  @Transactional
   public Product update(
       UUID id,
       UpdateProductRequest request

@@ -1,7 +1,10 @@
 package com.aleks.analytics.service;
 
 import com.aleks.analytics.dto.response.AnalyticsResponse;
+import com.aleks.shared.event.OrderCreatedEvent;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -9,6 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 @Getter
+@RequiredArgsConstructor
 public class AnalyticsService {
 
   private final AtomicLong products =
@@ -26,11 +30,21 @@ public class AnalyticsService {
   private BigDecimal revenue =
       BigDecimal.ZERO;
 
+  private final RedisTemplate redisTemplate;
+
   public void productCreated() {
     products.incrementAndGet();
   }
 
-  public void orderCreated() {
+  public void orderCreated(OrderCreatedEvent orderCreatedEvent) {
+
+    redisTemplate.opsForZSet()
+        .incrementScore(
+            "top-products",
+            orderCreatedEvent.productId().toString(),
+            1
+        );
+
     orders.incrementAndGet();
   }
 
