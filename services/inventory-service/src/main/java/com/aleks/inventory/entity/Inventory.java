@@ -1,5 +1,6 @@
 package com.aleks.inventory.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,9 +26,15 @@ public class Inventory {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
+  @Column(
+      nullable = false,
+      unique = true
+  )
   private UUID productId;
 
   private Integer quantity;
+
+  private Integer availableQuantity;
 
   private Integer reservedQuantity;
 }

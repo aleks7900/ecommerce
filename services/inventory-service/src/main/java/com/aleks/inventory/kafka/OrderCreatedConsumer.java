@@ -2,6 +2,7 @@ package com.aleks.inventory.kafka;
 
 import com.aleks.inventory.entity.Inventory;
 import com.aleks.inventory.repository.InventoryRepository;
+import com.aleks.inventory.service.InventoryService;
 import com.aleks.outbox.service.OutboxPublisherService;
 import com.aleks.shared.event.InventoryReservationFailedEvent;
 import com.aleks.shared.event.InventoryReservedEvent;
@@ -24,6 +25,8 @@ public class OrderCreatedConsumer {
       "inventory-reservation-failed";
 
   private final InventoryRepository inventoryRepository;
+
+  private final InventoryService inventoryService;
 
   private final OutboxPublisherService outboxPublisherService;
 
@@ -78,8 +81,11 @@ public class OrderCreatedConsumer {
             + event.quantity()
     );
 
-    inventoryRepository.save(
-        inventory
+    inventoryService.reserveStock(
+
+        event.productId(),
+
+        event.quantity()
     );
 
     InventoryReservedEvent reservedEvent =
