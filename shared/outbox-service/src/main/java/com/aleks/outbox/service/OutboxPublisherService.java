@@ -5,14 +5,13 @@ import com.aleks.outbox.repository.OutboxEventRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class OutboxPublisherService {
 
-  private final OutboxEventRepository repository;
+  private final OutboxEventRepository outboxEventRepository;
 
   private final ObjectMapper objectMapper;
 
@@ -29,7 +28,7 @@ public class OutboxPublisherService {
 
     try {
 
-      repository.save(
+      outboxEventRepository.save(
 
           OutboxEvent.builder()
 
@@ -68,6 +67,6 @@ public class OutboxPublisherService {
   }
 
   public void publish(OutboxEvent outboxEvent) {
-    repository.save(outboxEvent);
+    outboxEventRepository.save(outboxEvent);
   }
 }

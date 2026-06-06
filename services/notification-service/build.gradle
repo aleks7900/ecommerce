@@ -15,6 +15,9 @@ java {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://packages.confluent.io/maven/"
+    }
 }
 
 dependencies {
@@ -51,6 +54,8 @@ dependencies {
     implementation project(":shared:common-avro")
 
     implementation 'org.apache.avro:avro:1.11.4'
+
+    implementation 'io.confluent:kafka-avro-serializer:7.8.0'
 }
 
 tasks.named('test') {

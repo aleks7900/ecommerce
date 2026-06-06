@@ -97,8 +97,19 @@ services:
     ports:
       - "5439:5432"
 
+  postgres-payment:
+    image: postgres:16
+
+    environment:
+      POSTGRES_DB: payment_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pAskal123
+
+    ports:
+      - "5440:5432"
+
   debezium:
-    image: debezium/connect:3.0
+    image: debezium/connect:3.0.0.Final
 
     ports:
       - "8083:8083"
