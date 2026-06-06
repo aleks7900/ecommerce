@@ -5,9 +5,11 @@ import com.aleks.outbox.repository.OutboxEventRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class OutboxPublisherService {
 
@@ -58,7 +60,11 @@ public class OutboxPublisherService {
       );
 
     } catch (Exception ex) {
-
+      log.error(
+          "Failed to save outbox event",
+          ex
+      );
+      ex.printStackTrace();
       throw new RuntimeException(
           "Failed to save outbox event",
           ex

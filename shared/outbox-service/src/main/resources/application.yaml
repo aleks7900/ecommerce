@@ -1,13 +1,13 @@
 server:
-  port: 8089
+  port: 8090
 
 spring:
 
   application:
-    name: shipping-service
+    name: outbox-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5439/shipping_db
+    url: jdbc:postgresql://localhost:5439/outbox_db
     username: postgres
     password: pAskal123
 
@@ -18,8 +18,17 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
 
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
+logging:
+  level:
+    com.aleks.outbox: DEBUG

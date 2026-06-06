@@ -1,5 +1,6 @@
 package com.aleks.payment.kafka;
 
+import static com.aleks.avro.util.AvroJsonUtils.toJson;
 import com.aleks.avro.PaymentCompletedEvent;
 import com.aleks.avro.PaymentFailedEvent;
 import com.aleks.outbox.service.OutboxPublisherService;
@@ -24,7 +25,7 @@ public class PaymentEventPublisher {
         "PAYMENT",
         event.getPaymentId().toString(),
         "payment-completed",
-        event
+        toJson(event)
     );
 
     log.info(
@@ -56,7 +57,7 @@ public class PaymentEventPublisher {
         "PAYMENT",
         orderId.toString(),
         "payment-failed",
-        event
+        toJson(event)
     );
   }
 }

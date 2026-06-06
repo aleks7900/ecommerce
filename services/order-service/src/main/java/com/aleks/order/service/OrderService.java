@@ -7,10 +7,13 @@ import com.aleks.order.entity.OrderStatus;
 import com.aleks.order.exception.OrderNotFoundException;
 import com.aleks.order.kafka.OrderEventPublisher;
 import com.aleks.order.repository.OrderRepository;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,17 +22,40 @@ public class OrderService {
 
   private final OrderRepository orderRepository;
 
+  private final ProductClient productClient;
+
   private final OrderEventPublisher orderEventPublisher;
 
   public Order create(
       CreateOrderRequest request
   ) {
 
+    Authentication authentication =
+        SecurityContextHolder
+            .getContext()
+            .getAuthentication();
+
+    String email =
+        authentication.getName();
+
+    ProductResponse product =
+        productClient.getById(
+            request.productId()
+        );
+
+    BigDecimal totalPrice =
+        product.price()
+            .multiply(
+                BigDecimal.valueOf(
+                    request.quantity()
+                )
+            );
+
     Order order = Order.builder()
         .productId(request.productId())
-        .buyerId(request.buyerId())
+        .buyerId(UUID.fromString(email))
         .quantity(request.quantity())
-        .totalPrice(request.totalPrice())
+        .totalPrice(totalPrice)
         .status(OrderStatus.CREATED)
         .build();
 

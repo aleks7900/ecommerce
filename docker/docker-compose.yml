@@ -23,6 +23,12 @@ services:
 
   postgres-auth:
     image: postgres:16
+
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+
     environment:
       POSTGRES_DB: auth_db
       POSTGRES_USER: postgres
@@ -32,6 +38,12 @@ services:
 
   postgres-product:
     image: postgres:16
+
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+
     environment:
       POSTGRES_DB: product_db
       POSTGRES_USER: postgres
@@ -41,6 +53,12 @@ services:
 
   postgres-inventory:
     image: postgres:16
+
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+
     environment:
       POSTGRES_DB: inventory_db
       POSTGRES_USER: postgres
@@ -67,6 +85,11 @@ services:
   postgres-notification:
     image: postgres:16
 
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+
     environment:
       POSTGRES_DB: notification_db
       POSTGRES_USER: postgres
@@ -77,6 +100,11 @@ services:
 
   postgres-analytics:
     image: postgres:16
+
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
 
     environment:
       POSTGRES_DB: analytics_db
@@ -89,6 +117,11 @@ services:
   postgres-shipping:
     image: postgres:16
 
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+
     environment:
       POSTGRES_DB: shipping_db
       POSTGRES_USER: postgres
@@ -100,6 +133,11 @@ services:
   postgres-payment:
     image: postgres:16
 
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+
     environment:
       POSTGRES_DB: payment_db
       POSTGRES_USER: postgres
@@ -107,6 +145,17 @@ services:
 
     ports:
       - "5440:5432"
+
+  postgres-outbox:
+    image: postgres:16
+
+    environment:
+      POSTGRES_DB: outbox_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pAskal123
+
+    ports:
+      - "5441:5432"
 
   debezium:
     image: debezium/connect:3.0.0.Final
@@ -189,3 +238,52 @@ services:
     ports:
       - "16686:16686"
       - "4318:4318"
+
+  connector-init:
+    image: curlimages/curl:latest
+
+    depends_on:
+      - debezium
+
+    volumes:
+      - ./connectors:/connectors
+
+    entrypoint: >
+      sh -c "
+      echo 'Waiting for Debezium...';
+      until curl -s http://debezium:8083/connectors; do
+        sleep 5;
+      done;
+
+      curl -X POST -H 'Content-Type: application/json'
+        http://debezium:8083/connectors
+        -d @/connectors/debezium-connector-auth.json;
+
+      curl -X POST -H 'Content-Type: application/json'
+        http://debezium:8083/connectors
+        -d @/connectors/debezium-connector-product.json;
+
+      curl -X POST -H 'Content-Type: application/json'
+        http://debezium:8083/connectors
+        -d @/connectors/debezium-connector-order.json;
+
+      curl -X POST -H 'Content-Type: application/json'
+        http://debezium:8083/connectors
+        -d @/connectors/debezium-connector-inventory.json;
+
+      curl -X POST -H 'Content-Type: application/json'
+        http://debezium:8083/connectors
+        -d @/connectors/debezium-connector-shipping.json;
+
+      curl -X POST -H 'Content-Type: application/json'
+        http://debezium:8083/connectors
+        -d @/connectors/debezium-connector-payment.json;
+
+      curl -X POST -H 'Content-Type: application/json'
+        http://debezium:8083/connectors
+        -d @/connectors/debezium-connector-notification.json;
+
+      curl -X POST -H 'Content-Type: application/json'
+        http://debezium:8083/connectors
+        -d @/connectors/debezium-connector-analytics.json;
+      "

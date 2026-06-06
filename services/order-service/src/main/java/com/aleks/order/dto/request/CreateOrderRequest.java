@@ -12,13 +12,7 @@ public record CreateOrderRequest(
     UUID productId,
 
     @NotNull
-    UUID buyerId,
-
-    @NotNull
     @Min(1)
-    Integer quantity,
-
-    @NotNull
-    BigDecimal totalPrice
+    Integer quantity
 ) {
 }

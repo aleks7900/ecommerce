@@ -59,6 +59,8 @@ dependencies {
     implementation project(":shared:common-avro")
 
     implementation 'org.apache.avro:avro:1.11.4'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }
 
 dependencyManagement {

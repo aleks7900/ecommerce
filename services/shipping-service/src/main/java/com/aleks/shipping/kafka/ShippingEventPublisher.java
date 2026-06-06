@@ -1,5 +1,6 @@
 package com.aleks.shipping.kafka;
 
+import static com.aleks.avro.util.AvroJsonUtils.toJson;
 import com.aleks.avro.ShipmentCreatedEvent;
 import com.aleks.avro.ShipmentDeliveredEvent;
 import com.aleks.outbox.service.OutboxPublisherService;
@@ -33,8 +34,7 @@ public class ShippingEventPublisher {
           "SHIPMENT",
           event.getShipmentId(),
           "shipment-created",
-
-          event
+          toJson(event)
       );
 
       log.info(
@@ -91,7 +91,7 @@ public class ShippingEventPublisher {
         "SHIPMENT",
         shipment.getId().toString(),
         "shipment-delivered",
-        event
+        toJson(event)
     );
   }
 }

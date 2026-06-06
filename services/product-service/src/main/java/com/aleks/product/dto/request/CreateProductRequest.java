@@ -16,9 +16,6 @@ public record CreateProductRequest(
 
     @NotNull
     @DecimalMin("0.01")
-    BigDecimal price,
-
-    @NotNull
-    UUID sellerId
+    BigDecimal price
 ) {
 }

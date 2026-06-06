@@ -11,6 +11,7 @@ import com.aleks.shared.event.ProductStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -32,7 +33,10 @@ public class ProductService {
         .name(request.name())
         .description(request.description())
         .price(request.price())
-        .sellerId(request.sellerId())
+        .sellerId(UUID.fromString(SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getName()))
         .status(ProductStatus.ACTIVE)
         .createdAt(Instant.now())
         .updatedAt(Instant.now())

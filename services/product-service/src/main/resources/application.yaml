@@ -6,6 +6,12 @@ spring:
   application:
     name: product-service
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/.well-known/jwks.json
+
   datasource:
     url: jdbc:postgresql://localhost:5434/product_db
     username: postgres

@@ -2,12 +2,14 @@ package com.aleks.order.kafka;
 
 import com.aleks.avro.OrderConfirmedEvent;
 import com.aleks.avro.OrderCreatedEvent;
+import com.aleks.avro.util.AvroJsonUtils;
 import com.aleks.outbox.entity.OutboxEvent;
 import com.aleks.outbox.entity.OutboxStatus;
 import com.aleks.outbox.repository.OutboxEventRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.avro.specific.SpecificRecord;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -65,8 +67,8 @@ public class OrderEventPublisher {
                   topic
               )
               .payload(
-                  objectMapper.writeValueAsString(
-                      event
+                  AvroJsonUtils.toJson(
+                      (SpecificRecord) event
                   )
               )
               .status(

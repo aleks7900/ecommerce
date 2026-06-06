@@ -1,10 +1,16 @@
 package com.aleks.product.kafka;
 
+import static com.aleks.avro.util.AvroJsonUtils.toJson;
 import com.aleks.avro.ProductCreatedEvent;
 import com.aleks.avro.ProductUpdatedEvent;
 import com.aleks.outbox.service.OutboxPublisherService;
+import java.io.ByteArrayOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.avro.io.DatumWriter;
+import org.apache.avro.io.Encoder;
+import org.apache.avro.io.EncoderFactory;
+import org.apache.avro.specific.SpecificDatumWriter;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -33,7 +39,7 @@ public class ProductEventPublisher {
         "PRODUCT",
         String.valueOf(event.getProductId()),
         PRODUCT_CREATED_TOPIC,
-        event
+        toJson(event)
     );
   }
 
@@ -50,7 +56,7 @@ public class ProductEventPublisher {
         "PRODUCT",
         String.valueOf(event.getProductId()),
         PRODUCT_UPDATED_TOPIC,
-        event
+        toJson(event)
     );
   }
 }

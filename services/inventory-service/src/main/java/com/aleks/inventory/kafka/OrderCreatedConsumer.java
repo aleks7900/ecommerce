@@ -1,5 +1,6 @@
 package com.aleks.inventory.kafka;
 
+import static com.aleks.avro.util.AvroJsonUtils.toJson;
 import com.aleks.avro.InventoryReservationFailedEvent;
 import com.aleks.avro.InventoryReservedEvent;
 import com.aleks.avro.OrderCreatedEvent;
@@ -109,7 +110,7 @@ public class OrderCreatedConsumer {
         "INVENTORY",
         event.getOrderId(),
         INVENTORY_RESERVED_TOPIC,
-        reservedEvent
+        toJson(reservedEvent)
     );
 
     log.info(
@@ -143,7 +144,7 @@ public class OrderCreatedConsumer {
         "INVENTORY",
         event.getOrderId().toString(),
         INVENTORY_RESERVATION_FAILED_TOPIC,
-        failedEvent
+        toJson(failedEvent)
     );
 
     log.warn(

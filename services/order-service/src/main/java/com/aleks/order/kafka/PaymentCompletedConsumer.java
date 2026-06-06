@@ -1,5 +1,6 @@
 package com.aleks.order.kafka;
 
+import static com.aleks.avro.util.AvroJsonUtils.toJson;
 import com.aleks.avro.OrderConfirmedEvent;
 import com.aleks.avro.PaymentCompletedEvent;
 import com.aleks.order.entity.Order;
@@ -73,7 +74,7 @@ public class PaymentCompletedConsumer {
         "ORDER",
         order.getId().toString(),
         "order-confirmed",
-        confirmedEvent
+        toJson(confirmedEvent)
     );
 
     log.info(
