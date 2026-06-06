@@ -23,7 +23,7 @@ public class GatewayRoutesConfig {
 
         .route("order-service", route -> route
             .path("/api/orders/**")
-            .uri("http://localhost:8083"))
+            .uri("http://localhost:8084"))
 
         .build();
   }

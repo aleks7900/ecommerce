@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @RequiredArgsConstructor
@@ -27,11 +28,11 @@ public class SecurityConfig {
         .csrf(ServerHttpSecurity.CsrfSpec::disable)
 
         .authorizeExchange(exchange -> exchange
-
+            .pathMatchers(HttpMethod.OPTIONS, "/**")
+            .permitAll()
             .pathMatchers(
                 "/api/auth/**",
                 "/actuator/**",
-                "/api/products/**",
                 "/swagger-ui/**",
                 "/v3/api-docs/**"
             ).permitAll()
