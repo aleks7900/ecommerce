@@ -24,19 +24,19 @@ public class AnalyticsController {
     return analyticsService.getStats();
   }
 
-  @GetMapping("/dashboard")
+  @GetMapping("/api/analytics/dashboard")
   public DashboardMetrics dashboard() {
 
     return analyticsService.getMetrics();
   }
 
-  @GetMapping("/revenue")
+  @GetMapping("/api/analytics/revenue")
   public List<RevenuePoint> revenue() {
 
     return analyticsService.revenueTrend();
   }
 
-  @GetMapping("/users/{userId}")
+  @GetMapping("/api/analytics/users/{userId}")
   public UserAnalytics analytics(
       @PathVariable UUID userId
   ) {

@@ -1,11 +1,13 @@
 package com.aleks.order.kafka;
 
+import static com.aleks.avro.util.AvroJsonUtils.toJson;
 import com.aleks.avro.OrderConfirmedEvent;
 import com.aleks.avro.OrderCreatedEvent;
 import com.aleks.avro.util.AvroJsonUtils;
 import com.aleks.outbox.entity.OutboxEvent;
 import com.aleks.outbox.entity.OutboxStatus;
 import com.aleks.outbox.repository.OutboxEventRepository;
+import com.aleks.outbox.service.OutboxPublisherService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,19 +19,31 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OrderEventPublisher {
 
+
+  private static final String ORDER_CREATED_TOPIC =
+      "order-created";
+
+  private static final String ORDER_UPDATED_TOPIC =
+      "order-updated";
+
   private final OutboxEventRepository outboxEventRepository;
 
-  private final ObjectMapper objectMapper;
+  private final OutboxPublisherService outboxPublisherService;
 
   public void publishOrderCreatedEvent(
       OrderCreatedEvent event
   ) {
 
-    save(
+    log.info(
+        "Publishing OrderCreatedEvent for order {}",
+        event.getOrderId()
+    );
+
+    outboxPublisherService.publish(
         "ORDER",
-        "order-created",
-        event.getOrderId(),
-        event
+        String.valueOf(event.getOrderId()),
+        ORDER_CREATED_TOPIC,
+        toJson(event)
     );
   }
 
@@ -37,58 +51,16 @@ public class OrderEventPublisher {
       OrderConfirmedEvent event
   ) {
 
-    save(
-        "ORDER",
-        "order-confirmed",
-        event.getOrderId(),
-        event
+    log.info(
+        "Publishing OrderConfirmedEvent for order {}",
+        event.getOrderId()
     );
-  }
 
-  private void save(
-      String aggregateType,
-      String topic,
-      String aggregateId,
-      Object event
-  ) {
-
-    try {
-
-      outboxEventRepository.save(
-
-          OutboxEvent.builder()
-              .aggregateType(
-                  aggregateType
-              )
-              .aggregateId(
-                  aggregateId
-              )
-              .topic(
-                  topic
-              )
-              .payload(
-                  AvroJsonUtils.toJson(
-                      (SpecificRecord) event
-                  )
-              )
-              .status(
-                  OutboxStatus.NEW
-              )
-              .build()
-      );
-
-      log.info(
-          "Event saved to outbox. topic={}, aggregateId={}",
-          topic,
-          aggregateId
-      );
-
-    } catch (Exception ex) {
-
-      throw new RuntimeException(
-          "Failed to save outbox event",
-          ex
-      );
-    }
+    outboxPublisherService.publish(
+        "ORDER",
+        String.valueOf(event.getOrderId()),
+        ORDER_UPDATED_TOPIC,
+        toJson(event)
+    );
   }
 }
