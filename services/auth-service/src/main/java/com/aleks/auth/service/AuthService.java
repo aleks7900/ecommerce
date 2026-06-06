@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-  private final UserService userService;
+  private final UserServiceImpl userServiceImpl;
 
   private final JwtService jwtService;
 
@@ -20,7 +20,7 @@ public class AuthService {
 
   public AuthResponse register(RegisterRequest request) {
 
-    User user = userService.createUser(request);
+    User user = userServiceImpl.createUser(request);
 
     String accessToken =
         jwtService.generateAccessToken(user);
@@ -36,7 +36,7 @@ public class AuthService {
 
   public AuthResponse login(LoginRequest request) {
 
-    User user = userService.authenticate(request);
+    User user = userServiceImpl.authenticate(request);
 
     String accessToken =
         jwtService.generateAccessToken(user);

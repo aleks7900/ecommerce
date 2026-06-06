@@ -1,14 +1,20 @@
 package com.aleks.analytics.service;
 
+import com.aleks.analytics.dto.DashboardMetrics;
+import com.aleks.analytics.dto.RevenuePoint;
+import com.aleks.analytics.dto.UserAnalytics;
 import com.aleks.analytics.dto.response.AnalyticsResponse;
+import com.aleks.analytics.repository.AnalyticsRepository;
 import com.aleks.avro.OrderCreatedEvent;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 @Getter
@@ -26,11 +32,10 @@ public class AnalyticsService {
 
   private final AtomicLong notifications =
       new AtomicLong();
-
+  private final RedisTemplate redisTemplate;
+  private final AnalyticsRepository repository;
   private BigDecimal revenue =
       BigDecimal.ZERO;
-
-  private final RedisTemplate redisTemplate;
 
   public void productCreated() {
     products.incrementAndGet();
@@ -70,6 +75,67 @@ public class AnalyticsService {
         confirmedOrders.get(),
         notifications.get(),
         revenue
+    );
+  }
+
+  public DashboardMetrics getMetrics() {
+
+    return new DashboardMetrics(
+
+        repository.countOrders(),
+
+        repository.sumRevenue(),
+
+        repository.countCustomers()
+    );
+  }
+
+  public List<RevenuePoint> revenueTrend() {
+
+    return repository
+        .revenueTrend()
+
+        .stream()
+
+        .map(row ->
+
+            new RevenuePoint(
+
+                row[0].toString(),
+
+                ((Number) row[1])
+                    .doubleValue()
+            )
+        )
+
+        .toList();
+  }
+
+  public UserAnalytics getUserAnalytics(
+      UUID userId
+  ) {
+
+    Long ordersCount =
+        repository.countByCustomerId(
+            userId
+        );
+
+    BigDecimal totalSpent =
+        Optional.ofNullable(
+
+            repository.totalSpentByCustomerId(
+                userId
+            )
+
+        ).orElse(
+            BigDecimal.ZERO
+        );
+
+    return new UserAnalytics(
+
+        ordersCount,
+
+        totalSpent
     );
   }
 }
