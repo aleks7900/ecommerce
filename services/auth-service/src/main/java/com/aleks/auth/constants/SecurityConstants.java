@@ -12,7 +12,7 @@ public final class SecurityConstants {
       604800;
 
   public static final String TOKEN_ISSUER =
-      "auth-service";
+      "http://localhost:8081";
 
   public static final String ROLES_CLAIM =
       "roles";

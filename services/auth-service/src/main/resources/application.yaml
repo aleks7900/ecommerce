@@ -7,7 +7,7 @@ spring:
     name: auth-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/auth_db
+    url: jdbc:postgresql://localhost:5433/auth_db
     username: postgres
     password: pAskal123
 
@@ -33,4 +33,4 @@ management:
 
 logging:
   level:
-    org.springframework.security: INFO
+    org.springframework.security: TRACE

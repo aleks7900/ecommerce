@@ -14,6 +14,8 @@ import com.aleks.auth.service.UserServiceImpl;
 import jakarta.validation.Valid;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
+  private static final Logger log = LoggerFactory.getLogger(AuthController.class);
   private final AuthService authService;
 
   private final UserServiceImpl userServiceImpl;
@@ -57,8 +60,10 @@ public class AuthController {
       Authentication authentication
   ) {
 
+    log.info(authentication.getName());
+
     User user =
-        userServiceImpl.findByEmail(
+        userServiceImpl.findById(
             authentication.getName()
         );
 

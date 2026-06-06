@@ -22,7 +22,7 @@ public class JwtService {
     JwtClaimsSet claims =
         JwtClaimsSet.builder()
 
-            .issuer("auth-service")
+            .issuer("http://localhost:8081")
 
             .subject(user.getId().toString())
 

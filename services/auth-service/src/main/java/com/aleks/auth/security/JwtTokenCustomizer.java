@@ -15,7 +15,7 @@ public class JwtTokenCustomizer {
 
     return JwtClaimsSet.builder()
 
-        .issuer("auth-service")
+        .issuer("http://localhost:8081")
 
         .subject(user.getId().toString())
 

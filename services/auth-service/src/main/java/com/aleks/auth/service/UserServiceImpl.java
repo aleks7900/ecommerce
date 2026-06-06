@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,12 +87,25 @@ public class UserServiceImpl implements UserService {
   public User findByEmail(
       String email
   ) {
-
     return userRepository
         .findByEmail(email)
         .orElseThrow(
             () -> new UsernameNotFoundException(
                 email
+            )
+        );
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public User findById(
+      String id
+  ) {
+    return userRepository
+        .findById(UUID.fromString(id))
+        .orElseThrow(
+            () -> new UsernameNotFoundException(
+                id
             )
         );
   }
