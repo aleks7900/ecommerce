@@ -113,13 +113,13 @@ public class UserServiceImpl implements UserService {
   @Override
   public void updateProfile(
 
-      String email,
+      String id,
 
       UpdateProfileRequest request
   ) {
 
     User user =
-        findByEmail(email);
+        findById(id);
 
     user.setFirstName(
         request.firstName()
@@ -141,13 +141,13 @@ public class UserServiceImpl implements UserService {
   @Override
   public void changePassword(
 
-      String email,
+      String id,
 
       ChangePasswordRequest request
   ) {
 
     User user =
-        findByEmail(email);
+        findById(id);
 
     boolean matches =
         passwordEncoder.matches(
