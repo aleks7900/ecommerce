@@ -27,9 +27,12 @@
 
     "transforms.outbox.route.by.field": "event_type",
 
-    "transforms.outbox.route.topic.replacement":
-    "${routedByValue}",
+    "transforms.outbox.route.topic.replacement": "${routedByValue}",
 
-    "value.converter.schemas.enable": "false"
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "value.converter.schema.registry.url": "http://schema-registry:8081",
+    "value.converter.schemas.enable": "false",
+
+    "transforms.outbox.expand.json.payload": "true"
   }
 }

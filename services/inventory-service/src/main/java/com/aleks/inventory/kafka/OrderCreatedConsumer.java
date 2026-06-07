@@ -34,7 +34,8 @@ public class OrderCreatedConsumer {
 
   @KafkaListener(
       topics = "order-created",
-      groupId = "inventory-group"
+      groupId = "inventory-group",
+  containerFactory = "orderKafkaListenerContainerFactory"
   )
   public void consume(
       OrderCreatedEvent event
@@ -110,7 +111,7 @@ public class OrderCreatedConsumer {
         "INVENTORY",
         event.getOrderId(),
         INVENTORY_RESERVED_TOPIC,
-        toJson(reservedEvent)
+        reservedEvent
     );
 
     log.info(
@@ -144,7 +145,7 @@ public class OrderCreatedConsumer {
         "INVENTORY",
         event.getOrderId().toString(),
         INVENTORY_RESERVATION_FAILED_TOPIC,
-        toJson(failedEvent)
+        failedEvent
     );
 
     log.warn(

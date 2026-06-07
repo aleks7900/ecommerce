@@ -34,7 +34,7 @@ public class ProductEventPublisher {
         "PRODUCT",
         String.valueOf(event.getProductId()),
         PRODUCT_CREATED_TOPIC,
-        toJson(event)
+        event
     );
   }
 
@@ -51,7 +51,7 @@ public class ProductEventPublisher {
         "PRODUCT",
         String.valueOf(event.getProductId()),
         PRODUCT_UPDATED_TOPIC,
-        toJson(event)
+        event
     );
   }
 }

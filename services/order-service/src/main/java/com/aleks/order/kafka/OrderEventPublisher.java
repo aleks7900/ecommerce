@@ -26,8 +26,6 @@ public class OrderEventPublisher {
   private static final String ORDER_UPDATED_TOPIC =
       "order-updated";
 
-  private final OutboxEventRepository outboxEventRepository;
-
   private final OutboxPublisherService outboxPublisherService;
 
   public void publishOrderCreatedEvent(
@@ -43,7 +41,7 @@ public class OrderEventPublisher {
         "ORDER",
         String.valueOf(event.getOrderId()),
         ORDER_CREATED_TOPIC,
-        toJson(event)
+        event
     );
   }
 
@@ -60,7 +58,7 @@ public class OrderEventPublisher {
         "ORDER",
         String.valueOf(event.getOrderId()),
         ORDER_UPDATED_TOPIC,
-        toJson(event)
+        event
     );
   }
 }

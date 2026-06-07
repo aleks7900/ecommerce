@@ -32,7 +32,11 @@ dependencies {
 
     runtimeOnly 'org.postgresql:postgresql'
 
+    implementation 'org.apache.avro:avro:1.11.4'
+
     implementation project(":shared:common-kafka")
+
+    implementation project(":shared:common-avro")
 }
 
 dependencyManagement {

@@ -146,19 +146,10 @@ services:
     ports:
       - "5440:5432"
 
-  postgres-outbox:
-    image: postgres:16
-
-    environment:
-      POSTGRES_DB: outbox_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: pAskal123
-
-    ports:
-      - "5441:5432"
-
-  debezium:
-    image: debezium/connect:3.0.0.Final
+  connect:
+    build:
+      context: .
+      dockerfile: Dockerfile
 
     ports:
       - "8083:8083"
@@ -167,23 +158,26 @@ services:
       - kafka
 
     environment:
-      BOOTSTRAP_SERVERS: kafka:9092
+      CONNECT_BOOTSTRAP_SERVERS: kafka:9092
 
-      GROUP_ID: 1
+      CONNECT_GROUP_ID: connect-cluster
 
-      CONFIG_STORAGE_TOPIC: connect_configs
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components,/usr/share/kafka/plugins
 
-      OFFSET_STORAGE_TOPIC: connect_offsets
+      CONNECT_CONFIG_STORAGE_TOPIC: connect_configs
+      CONNECT_OFFSET_STORAGE_TOPIC: connect_offsets
+      CONNECT_STATUS_STORAGE_TOPIC: connect_statuses
 
-      STATUS_STORAGE_TOPIC: connect_statuses
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
 
-      KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect
 
-      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
 
-      KEY_CONVERTER_SCHEMAS_ENABLE: false
-
-      VALUE_CONVERTER_SCHEMAS_ENABLE: false
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
@@ -245,31 +239,31 @@ services:
     image: curlimages/curl:latest
 
     depends_on:
-      - debezium
+      - connect
 
     volumes:
       - ./connectors:/connectors
 
     entrypoint: >
       sh -c "
-      echo 'Waiting for Debezium...';
-      until curl -s http://debezium:8083/connectors; do
-        sleep 5;
-      done;
+      echo 'Waiting for connect...';
+      until curl -sf http://connect:8083/connectors > /dev/null; do
+        sleep 5
+      done
 
-      curl -X POST -H 'Content-Type: application/json' http://debezium:8083/connectors -d @/connectors/debezium-connector-auth.json;
+      curl -X POST -H 'Content-Type: application/json' http://connect:8083/connectors -d @/connectors/debezium-connector-auth.json;
 
-      curl -X POST -H 'Content-Type: application/json' http://debezium:8083/connectors -d @/connectors/debezium-connector-product.json;
+      curl -X POST -H 'Content-Type: application/json' http://connect:8083/connectors -d @/connectors/debezium-connector-product.json;
 
-      curl -X POST -H 'Content-Type: application/json' http://debezium:8083/connectors -d @/connectors/debezium-connector-order.json;
+      curl -X POST -H 'Content-Type: application/json' http://connect:8083/connectors -d @/connectors/debezium-connector-order.json;
 
-      curl -X POST -H 'Content-Type: application/json' http://debezium:8083/connectors -d @/connectors/debezium-connector-inventory.json;
+      curl -X POST -H 'Content-Type: application/json' http://connect:8083/connectors -d @/connectors/debezium-connector-inventory.json;
 
-      curl -X POST -H 'Content-Type: application/json' http://debezium:8083/connectors -d @/connectors/debezium-connector-shipping.json;
+      curl -X POST -H 'Content-Type: application/json' http://connect:8083/connectors -d @/connectors/debezium-connector-shipping.json;
 
-      curl -X POST -H 'Content-Type: application/json' http://debezium:8083/connectors -d @/connectors/debezium-connector-payment.json;
+      curl -X POST -H 'Content-Type: application/json' http://connect:8083/connectors -d @/connectors/debezium-connector-payment.json;
 
-      curl -X POST -H 'Content-Type: application/json' http://debezium:8083/connectors -d @/connectors/debezium-connector-notification.json;
+      curl -X POST -H 'Content-Type: application/json' http://connect:8083/connectors -d @/connectors/debezium-connector-notification.json;
 
-      curl -X POST -H 'Content-Type: application/json' http://debezium:8083/connectors -d @/connectors/debezium-connector-analytics.json;
+      curl -X POST -H 'Content-Type: application/json' http://connect:8083/connectors -d @/connectors/debezium-connector-analytics.json;
       "

@@ -52,7 +52,7 @@ public class NotificationEventPublisher {
               .aggregateId(aggregateId)
               .topic(topic)
               .payload(
-                  objectMapper.writeValueAsString(
+                  objectMapper.valueToTree(
                       payload
                   )
               )

@@ -3,7 +3,7 @@ server:
 
 security:
   jwt:
-    jwk-set-uri: http://localhost:8081/.well-known/jwks.json
+    jwk-set-uri: http://localhost:8079/.well-known/jwks.json
     issuer-uri: http://localhost:8081
 
 spring:
@@ -19,7 +19,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8081/.well-known/jwks.json
+          jwk-set-uri: http://localhost:8079/.well-known/jwks.json
           issuer-uri: http://localhost:8081
 
   cloud:
@@ -44,7 +44,7 @@ spring:
       routes:
 
         - id: auth-service
-          uri: http://localhost:8081
+          uri: http://localhost:8079
           predicates:
             - Path=/api/auth/**
 

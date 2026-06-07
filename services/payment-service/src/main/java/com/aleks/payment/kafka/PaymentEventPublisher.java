@@ -25,7 +25,7 @@ public class PaymentEventPublisher {
         "PAYMENT",
         event.getPaymentId().toString(),
         "payment-completed",
-        toJson(event)
+        event
     );
 
     log.info(
@@ -57,7 +57,7 @@ public class PaymentEventPublisher {
         "PAYMENT",
         orderId.toString(),
         "payment-failed",
-        toJson(event)
+        event
     );
   }
 }

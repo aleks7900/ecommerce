@@ -19,33 +19,14 @@ public class OrderCreatedConsumer {
 
   private final AnalyticsService analyticsService;
 
-  private final ObjectMapper objectMapper;
-
   private final AnalyticsRepository repository;
 
   @KafkaListener(
       topics = "order-created",
-      groupId = "analytics-group"
+      groupId = "analytics-group",
+      containerFactory = "orderKafkaListenerContainerFactory"
   )
-  public void consume(String message) throws Exception {
-
-    DebeziumMessage wrapper =
-        objectMapper.readValue(
-            message,
-            DebeziumMessage.class
-        );
-
-    String payload =
-        objectMapper.readValue(
-            wrapper.getPayload(),
-            String.class
-        );
-
-    OrderCreatedEvent event =
-        objectMapper.readValue(
-            payload,
-            OrderCreatedEvent.class
-        );
+  public void consume(OrderCreatedEvent event) {
 
     AnalyticsOrder analyticsOrder =
         AnalyticsOrder.builder()

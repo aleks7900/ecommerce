@@ -15,7 +15,7 @@ public class GatewayRoutesConfig {
 
         .route("auth-service", route -> route
             .path("/api/auth/**")
-            .uri("http://localhost:8081"))
+            .uri("http://localhost:8079"))
 
         .route("product-service", route -> route
             .path("/api/products/**")

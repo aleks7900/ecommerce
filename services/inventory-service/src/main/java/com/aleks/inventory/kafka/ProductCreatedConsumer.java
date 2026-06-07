@@ -18,7 +18,8 @@ public class ProductCreatedConsumer {
 
   @KafkaListener(
       topics = "product-created",
-      groupId = "inventory-group"
+      groupId = "inventory-group",
+      containerFactory = "productKafkaListenerContainerFactory"
   )
   public void consume(
       ProductCreatedEvent event

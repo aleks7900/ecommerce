@@ -74,7 +74,7 @@ public class PaymentCompletedConsumer {
         "ORDER",
         order.getId().toString(),
         "order-confirmed",
-        toJson(confirmedEvent)
+        confirmedEvent
     );
 
     log.info(

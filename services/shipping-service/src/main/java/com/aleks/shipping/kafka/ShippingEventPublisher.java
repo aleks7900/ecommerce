@@ -34,7 +34,7 @@ public class ShippingEventPublisher {
           "SHIPMENT",
           event.getShipmentId(),
           "shipment-created",
-          toJson(event)
+          event
       );
 
       log.info(
@@ -91,7 +91,7 @@ public class ShippingEventPublisher {
         "SHIPMENT",
         shipment.getId().toString(),
         "shipment-delivered",
-        toJson(event)
+        event
     );
   }
 }

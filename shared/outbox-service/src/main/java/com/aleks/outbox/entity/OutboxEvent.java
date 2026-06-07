@@ -1,10 +1,13 @@
 package com.aleks.outbox.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
 import java.util.UUID;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "outbox_events")
@@ -27,8 +30,9 @@ public class OutboxEvent {
 
   private String eventType;
 
-  @Column(columnDefinition = "TEXT")
-  private String payload;
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(columnDefinition = "jsonb")
+  private JsonNode payload;
 
   @Enumerated(EnumType.STRING)
   private OutboxStatus status;

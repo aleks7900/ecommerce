@@ -1,11 +1,15 @@
 package com.aleks.outbox.service;
 
+import com.aleks.avro.util.AvroJsonUtils;
 import com.aleks.outbox.entity.OutboxEvent;
+import com.aleks.outbox.entity.OutboxStatus;
 import com.aleks.outbox.repository.OutboxEventRepository;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.avro.specific.SpecificRecord;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,7 +32,21 @@ public class OutboxPublisherService {
       Object event
   ) {
 
+    JsonNode payload;
     try {
+
+      if (event instanceof SpecificRecord record) {
+
+        payload =
+            objectMapper.readTree(
+                AvroJsonUtils.toJson(record)
+            );
+
+      } else {
+
+        payload =
+            objectMapper.valueToTree(event);
+      }
 
       outboxEventRepository.save(
 
@@ -37,7 +55,7 @@ public class OutboxPublisherService {
               .aggregateType(
                   aggregateType
               )
-
+              .topic(eventType)
               .aggregateId(
                   aggregateId
               )
@@ -45,11 +63,9 @@ public class OutboxPublisherService {
               .eventType(
                   eventType
               )
-
+              .status(OutboxStatus.NEW)
               .payload(
-                  objectMapper.writeValueAsString(
-                      event
-                  )
+                  payload
               )
 
               .createdAt(
