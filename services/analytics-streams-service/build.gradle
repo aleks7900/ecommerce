@@ -38,6 +38,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
     implementation project(":shared:common-avro")
 
     implementation 'org.apache.avro:avro:1.11.4'

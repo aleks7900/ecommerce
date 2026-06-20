@@ -1,10 +1,17 @@
 server:
   port: 8094
 
-spring:
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka
 
+spring:
   application:
     name: analytics-service
+
+  config:
+    import: optional:configserver:http://localhost:8888
 
   datasource:
     url: jdbc:postgresql://localhost:5438/analytics_db
@@ -56,9 +63,6 @@ management:
       endpoint: http://localhost:4318/v1/traces
 
 logging:
-
   level:
-
     org.springframework.kafka: INFO
-
     org.hibernate.SQL: INFO

@@ -25,13 +25,9 @@ dependencies {
     implementation project(":shared:common-kafka")
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
     implementation 'org.springframework.kafka:spring-kafka'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -44,16 +40,14 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
     testImplementation 'org.springframework.kafka:spring-kafka-test'
-
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     implementation project(":shared:outbox-service")
-
     implementation project(":shared:common-avro")
-
     implementation 'org.apache.avro:avro:1.11.4'
+
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
 
     implementation 'io.confluent:kafka-avro-serializer:7.8.0'
 }

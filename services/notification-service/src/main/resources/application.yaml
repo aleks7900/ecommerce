@@ -1,10 +1,17 @@
 server:
   port: 8086
 
-spring:
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka
 
+spring:
   application:
     name: notification-service
+
+  config:
+    import: optional:configserver:http://localhost:8888
 
   datasource:
     url: jdbc:postgresql://localhost:5437/notification_db

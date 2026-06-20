@@ -8,6 +8,8 @@ rootProject.name = 'ecommerce'
 include(
         "infrastructure:api-gateway",
         "infrastructure:websocket-gateway",
+        "infrastructure:discovery-service",
+        "infrastructure:config-server",
 
         "services:auth-service",
         "services:product-service",

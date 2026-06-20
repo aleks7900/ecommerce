@@ -46,17 +46,14 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 
+    implementation project(":shared:common-avro")
     implementation project(":shared:common-kafka")
 
     implementation 'org.springframework.kafka:spring-kafka'
-
     implementation 'io.confluent:kafka-avro-serializer:7.6.1'
-
     implementation 'org.apache.avro:avro:1.11.4'
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
 
-    implementation project(":shared:common-avro")
-
-    implementation 'org.apache.avro:avro:1.11.4'
 }
 
 dependencyManagement {
